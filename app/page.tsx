@@ -1,4 +1,5 @@
 import { Dumbbell, Triangle, Compass, Square, Box, MapPin, ArrowRight, Flame, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 const muscleGroups = [
   {
@@ -6,36 +7,48 @@ const muscleGroups = [
     title: "Shapes & Polygons",
     description: "Triangles, quadrilaterals, circles, and everything in between.",
     reps: "24 reps",
+    href: "/workout/shapes",
+    available: false,
   },
   {
     icon: Compass,
     title: "Angles",
     description: "Types of angles, angle relationships, and how to measure them.",
-    reps: "18 reps",
+    reps: "23 reps",
+    href: "/workout/angles",
+    available: true,
   },
   {
     icon: Square,
     title: "Area & Perimeter",
     description: "How much space a shape takes up and how far it is around the edge.",
     reps: "30 reps",
+    href: "/workout/area-perimeter",
+    available: false,
   },
   {
     icon: Box,
     title: "Volume & Surface Area",
     description: "3D shapes, the space they hold, and the surface that wraps them.",
     reps: "20 reps",
+    href: "/workout/volume",
+    available: false,
   },
   {
     icon: MapPin,
     title: "The Coordinate Plane",
     description: "Plotting points, reading graphs, and understanding position in space.",
     reps: "16 reps",
+    href: "/workout/coordinates",
+    available: false,
   },
   {
     icon: Dumbbell,
     title: "The Pythagorean Theorem",
     description: "The relationship between the sides of a right triangle. Classic and powerful.",
     reps: "12 reps",
+    href: "/workout/pythagorean",
+    available: false,
   },
 ];
 
@@ -57,6 +70,29 @@ const steps = [
   },
 ];
 
+const bgShapes = [
+  { type: 'circle',   top: '2%',  left: '1%',  size: 260, rotate:   0 },
+  { type: 'triangle', top: '1%',  left: '72%', size: 220, rotate:  15 },
+  { type: 'rect',     top: '12%', left: '85%', size: 240, rotate: -12 },
+  { type: 'hexagon',  top: '16%', left: '-2%', size: 200, rotate:   8 },
+  { type: 'diamond',  top: '22%', left: '58%', size: 220, rotate:   0 },
+  { type: 'pentagon', top: '30%', left: '6%',  size: 250, rotate:  -5 },
+  { type: 'circle',   top: '28%', left: '79%', size: 180, rotate:   0 },
+  { type: 'triangle', top: '38%', left: '38%', size: 230, rotate: -20 },
+  { type: 'rect',     top: '42%', left: '-1%', size: 200, rotate:  10 },
+  { type: 'hexagon',  top: '47%', left: '72%', size: 220, rotate:  -8 },
+  { type: 'diamond',  top: '54%', left: '17%', size: 190, rotate:  12 },
+  { type: 'circle',   top: '58%', left: '84%', size: 250, rotate:   0 },
+  { type: 'pentagon', top: '63%', left: '3%',  size: 210, rotate: -15 },
+  { type: 'triangle', top: '67%', left: '52%', size: 220, rotate:   8 },
+  { type: 'rect',     top: '73%', left: '77%', size: 190, rotate:  -6 },
+  { type: 'hexagon',  top: '76%', left: '27%', size: 240, rotate:   5 },
+  { type: 'circle',   top: '82%', left: '63%', size: 180, rotate:   0 },
+  { type: 'diamond',  top: '86%', left: '2%',  size: 220, rotate: -10 },
+  { type: 'triangle', top: '91%', left: '86%', size: 200, rotate:  18 },
+  { type: 'pentagon', top: '93%', left: '44%', size: 190, rotate:  -7 },
+];
+
 export default function Home() {
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -65,7 +101,91 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-white text-dark font-sans">
+    <div className="relative min-h-screen bg-white text-dark font-sans overflow-x-hidden">
+
+      {/* Decorative geometry shape watermark */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        {bgShapes.map(({ type, top, left, size, rotate }) => (
+          <svg
+            key={`${type}-${top}-${left}`}
+            className="absolute"
+            style={{ top, left, width: size, height: size, transform: `rotate(${rotate}deg)` }}
+            viewBox="0 0 100 100"
+            fill="none"
+            stroke="#efefef"
+            strokeWidth={2}
+            strokeLinejoin="round"
+          >
+            {type === 'circle' && (
+              <>
+                <circle cx="50" cy="50" r="44" />
+                <ellipse cx="50" cy="50" rx="44" ry="15" strokeDasharray="5 3" />
+                <ellipse cx="50" cy="50" rx="15" ry="44" strokeDasharray="5 3" />
+              </>
+            )}
+            {type === 'rect' && (
+              <>
+                {/* front face */}
+                <rect x="4" y="18" width="76" height="76" />
+                {/* top face */}
+                <polygon points="4,18 16,6 92,6 80,18" />
+                {/* right face */}
+                <polygon points="80,18 92,6 92,82 80,94" />
+              </>
+            )}
+            {type === 'triangle' && (
+              <>
+                {/* cone: apex, base ellipse, two side lines */}
+                <ellipse cx="50" cy="84" rx="40" ry="12" />
+                <line x1="50" y1="6" x2="10" y2="84" />
+                <line x1="50" y1="6" x2="90" y2="84" />
+                <ellipse cx="50" cy="84" rx="40" ry="12" strokeDasharray="5 3" stroke="#efefef" />
+              </>
+            )}
+            {type === 'pentagon' && (
+              <>
+                {/* front face */}
+                <polygon points="50,8 90,36 74,86 26,86 10,36" />
+                {/* back face offset (+9,-7) */}
+                <polygon points="59,1 99,29 83,79 35,79 19,29" strokeDasharray="5 3" />
+                {/* connecting edges (left visible) */}
+                <line x1="50" y1="8" x2="59" y2="1" />
+                <line x1="10" y1="36" x2="19" y2="29" />
+                <line x1="90" y1="36" x2="99" y2="29" />
+              </>
+            )}
+            {type === 'hexagon' && (
+              <>
+                {/* front face */}
+                <polygon points="50,6 84,25 84,72 50,91 16,72 16,25" />
+                {/* back face offset (+9,-7) */}
+                <polygon points="59,-1 93,18 93,65 59,84 25,65 25,18" strokeDasharray="5 3" />
+                {/* connecting edges */}
+                <line x1="50" y1="6"  x2="59" y2="-1" />
+                <line x1="84" y1="25" x2="93" y2="18" />
+                <line x1="84" y1="72" x2="93" y2="65" />
+              </>
+            )}
+            {type === 'diamond' && (
+              <>
+                {/* faceted gem: top pyramid + bottom pyramid + girdle */}
+                {/* girdle (widest ring) */}
+                <polygon points="50,42 92,50 50,58 8,50" />
+                {/* top facets */}
+                <line x1="50" y1="5"  x2="92" y2="50" />
+                <line x1="50" y1="5"  x2="50" y2="42" />
+                <line x1="50" y1="5"  x2="8"  y2="50" />
+                <line x1="50" y1="42" x2="92" y2="50" />
+                <line x1="50" y1="42" x2="8"  y2="50" />
+                {/* bottom point */}
+                <line x1="92" y1="50" x2="50" y2="95" />
+                <line x1="8"  y1="50" x2="50" y2="95" />
+                <line x1="50" y1="58" x2="50" y2="95" />
+              </>
+            )}
+          </svg>
+        ))}
+      </div>
 
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur-sm">
@@ -97,8 +217,7 @@ export default function Home() {
         </div>
         <h1 className="mt-4 text-5xl font-extrabold leading-tight tracking-tight text-dark sm:text-6xl lg:text-7xl">
           Train Your{" "}
-          <span className="text-primary">Geometry</span>{" "}
-          Brain
+          <span className="text-primary">Brain</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted">
           Math is a skill — and like any skill, it gets stronger with practice.
@@ -106,13 +225,13 @@ export default function Home() {
           one problem at a time. No pressure. Just reps.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a
-            href="#workout"
+          <Link
+            href="/workout/angles"
             className="flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark"
           >
             Today&apos;s Workout
             <ArrowRight className="h-4 w-4" />
-          </a>
+          </Link>
           <a
             href="#topics"
             className="flex items-center gap-2 rounded-full border border-border px-7 py-3.5 text-base font-semibold text-dark transition-colors hover:bg-surface"
@@ -147,12 +266,13 @@ export default function Home() {
               <p className="mt-2 text-sm text-muted">Multiple choice · ~5 minutes</p>
             </div>
             <div className="flex flex-col justify-center px-8 py-6">
-              <button
+              <Link
+                href="/workout/angles"
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-semibold text-white transition-colors hover:bg-primary-dark"
               >
                 Start Workout
                 <ChevronRight className="h-4 w-4" />
-              </button>
+              </Link>
               <p className="mt-3 text-center text-xs text-muted">Resets every day at midnight</p>
             </div>
           </div>
@@ -176,16 +296,19 @@ export default function Home() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {muscleGroups.map((group) => {
               const Icon = group.icon;
-              return (
-                <button
-                  key={group.title}
-                  className="group flex flex-col gap-4 rounded-2xl border border-border bg-white p-6 text-left transition-all hover:border-primary/40 hover:shadow-md"
-                >
+              const cardClass = group.available
+                ? "group flex flex-col gap-4 rounded-2xl border border-border bg-white p-6 text-left transition-all hover:border-primary/40 hover:shadow-md"
+                : "group flex flex-col gap-4 rounded-2xl border border-border bg-white p-6 text-left opacity-50 cursor-not-allowed";
+
+              const inner = (
+                <>
                   <div className="flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
                       <Icon className="h-5 w-5 text-primary" />
                     </div>
-                    <span className="text-xs font-medium text-muted">{group.reps}</span>
+                    <span className="text-xs font-medium text-muted">
+                      {group.available ? group.reps : 'Coming soon'}
+                    </span>
                   </div>
                   <div>
                     <h3 className="font-bold text-dark group-hover:text-primary transition-colors">
@@ -195,10 +318,22 @@ export default function Home() {
                       {group.description}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                    Start training <ChevronRight className="h-3 w-3" />
-                  </div>
-                </button>
+                  {group.available && (
+                    <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                      Start training <ChevronRight className="h-3 w-3" />
+                    </div>
+                  )}
+                </>
+              );
+
+              return group.available ? (
+                <Link key={group.title} href={group.href} className={cardClass}>
+                  {inner}
+                </Link>
+              ) : (
+                <div key={group.title} className={cardClass}>
+                  {inner}
+                </div>
               );
             })}
           </div>
