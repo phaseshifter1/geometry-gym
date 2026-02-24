@@ -193,12 +193,13 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Dumbbell className="h-6 w-6 text-primary" />
-            <span className="text-lg font-bold tracking-tight">Geometry Gym</span>
+            <span className="text-2xl font-bold tracking-tight">Geometry Gym</span>
+            <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Beta</span>
           </Link>
-          <div className="hidden items-center gap-8 text-sm font-medium text-muted sm:flex">
+          <div className="hidden items-center gap-8 text-lg font-medium text-muted sm:flex">
             <a href="#workout" className="hover:text-dark transition-colors">Daily Workout</a>
             <a href="#topics" className="hover:text-dark transition-colors">Topics</a>
-            <a href="#how-it-works" className="hover:text-dark transition-colors">How It Works</a>
+            <Link href="/library" className="hover:text-dark transition-colors">Library</Link>
           </div>
           <a
             href="#workout"
@@ -216,6 +217,9 @@ export default function Home() {
           <Flame className="h-3 w-3 text-primary" />
           Daily geometry training
         </div>
+        <p className="text-3xl font-bold text-primary tracking-wide">
+          Building stronger brains one math rep at a time.
+        </p>
         <h1 className="mt-4 text-5xl font-extrabold leading-tight tracking-tight text-dark sm:text-6xl lg:text-7xl">
           Train Your{" "}
           <span className="text-primary">Brain</span>
@@ -324,12 +328,16 @@ export default function Home() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {muscleGroups.map((group) => {
               const Icon = group.icon;
-              const cardClass = group.available
-                ? "group flex flex-col gap-4 rounded-2xl border border-border bg-white p-6 text-left transition-all hover:border-primary/40 hover:shadow-md"
-                : "group flex flex-col gap-4 rounded-2xl border border-border bg-white p-6 text-left opacity-50 cursor-not-allowed";
-
-              const inner = (
-                <>
+              const topicSlug = group.href.split('/').pop();
+              return (
+                <div
+                  key={group.title}
+                  className={`flex flex-col gap-4 rounded-2xl border border-border bg-white p-6 transition-all ${
+                    group.available
+                      ? 'hover:border-primary/40 hover:shadow-md'
+                      : 'opacity-50'
+                  }`}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
                       <Icon className="h-5 w-5 text-primary" />
@@ -338,29 +346,26 @@ export default function Home() {
                       {group.available ? group.reps : 'Coming soon'}
                     </span>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-dark group-hover:text-primary transition-colors">
-                      {group.title}
-                    </h3>
-                    <p className="mt-1 text-sm leading-relaxed text-muted">
-                      {group.description}
-                    </p>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-dark">{group.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">{group.description}</p>
                   </div>
                   {group.available && (
-                    <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                      Start training <ChevronRight className="h-3 w-3" />
+                    <div className="flex items-center justify-between pt-2 border-t border-border">
+                      <Link
+                        href={`${group.href}?mode=practice`}
+                        className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                      >
+                        Start training <ChevronRight className="h-3 w-3" />
+                      </Link>
+                      <Link
+                        href={`/library?topic=${topicSlug}`}
+                        className="text-xs text-muted hover:text-primary transition-colors"
+                      >
+                        Study first →
+                      </Link>
                     </div>
                   )}
-                </>
-              );
-
-              return group.available ? (
-                <Link key={group.title} href={`${group.href}?mode=practice`} className={cardClass}>
-                  {inner}
-                </Link>
-              ) : (
-                <div key={group.title} className={cardClass}>
-                  {inner}
                 </div>
               );
             })}
@@ -374,10 +379,8 @@ export default function Home() {
           <div className="flex items-center gap-2 text-sm font-semibold text-dark">
             <Dumbbell className="h-4 w-4 text-primary" />
             Geometry Gym
+            <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Beta</span>
           </div>
-          <p className="text-xs text-muted">
-            Building stronger math brains, one rep at a time.
-          </p>
         </div>
       </footer>
 

@@ -52,6 +52,9 @@ function CoachPanel({
   });
 
   const isLoading = status === 'submitted' || status === 'streaming';
+  const MESSAGE_LIMIT = 10;
+  const userMessageCount = messages.filter((m) => m.role === 'user').length;
+  const atLimit = userMessageCount >= MESSAGE_LIMIT;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,7 +62,7 @@ function CoachPanel({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || atLimit) return;
     sendMessage({ text: input });
     setInput('');
   }
@@ -83,9 +86,9 @@ function CoachPanel({
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         {messages.length === 0 && (
-          <div className="rounded-xl bg-surface p-4 text-sm text-muted">
+          <div className="rounded-xl bg-slate-100 p-4 text-sm">
             <p className="font-medium text-dark mb-1">Hi! I&apos;m your geometry coach.</p>
-            <p>Ask me anything about this question — why an answer is right or wrong, what a term means, or how to think about it.</p>
+            <p className="text-dark">Ask me anything about this question — why an answer is right or wrong, what a term means, or how to think about it.</p>
           </div>
         )}
         {messages.map((m: UIMessage) => {
@@ -102,7 +105,7 @@ function CoachPanel({
                 className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                   m.role === 'user'
                     ? 'bg-primary text-white'
-                    : 'bg-surface text-dark'
+                    : 'bg-slate-100 text-dark'
                 }`}
               >
                 {text}
@@ -112,7 +115,7 @@ function CoachPanel({
         })}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="rounded-2xl bg-surface px-4 py-2.5 text-sm text-muted">
+            <div className="rounded-2xl bg-slate-100 px-4 py-2.5 text-sm text-dark">
               Thinking...
             </div>
           </div>
@@ -120,25 +123,34 @@ function CoachPanel({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <form
-        onSubmit={handleSubmit}
-        className="flex items-center gap-2 border-t border-border px-4 py-3"
-      >
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask a question..."
-          className="flex-1 rounded-xl border border-border bg-surface px-3 py-2 text-sm text-dark placeholder-muted focus:border-primary focus:outline-none"
-        />
-        <button
-          type="submit"
-          disabled={!input.trim() || isLoading}
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white transition-colors hover:bg-primary-dark disabled:opacity-40"
+      {/* Input / limit message */}
+      {atLimit ? (
+        <div className="border-t border-border px-4 py-4">
+          <p className="text-xs text-center text-muted leading-relaxed">
+            <span className="font-semibold text-dark">Beta limit reached.</span>{' '}
+            Coach sessions are capped at {MESSAGE_LIMIT} messages during Beta. Move to the next question to start a fresh chat.
+          </p>
+        </div>
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="flex items-center gap-2 border-t border-border px-4 py-3"
         >
-          <Send className="h-4 w-4" />
-        </button>
-      </form>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask a question..."
+            className="flex-1 rounded-xl border border-border bg-surface px-3 py-2 text-sm text-dark placeholder-muted focus:border-primary focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={!input.trim() || isLoading}
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white transition-colors hover:bg-primary-dark disabled:opacity-40"
+          >
+            <Send className="h-4 w-4" />
+          </button>
+        </form>
+      )}
     </div>
   );
 }
