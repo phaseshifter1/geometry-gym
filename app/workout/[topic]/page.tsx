@@ -207,6 +207,12 @@ function FinishedScreen({
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
+      <a
+        href="/feedback"
+        className="mt-6 text-sm text-muted hover:text-primary transition-colors underline underline-offset-4"
+      >
+        How was that? Leave feedback →
+      </a>
     </div>
   );
 }

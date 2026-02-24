@@ -200,6 +200,7 @@ export default function Home() {
             <a href="#workout" className="hover:text-dark transition-colors">Daily Workout</a>
             <a href="#topics" className="hover:text-dark transition-colors">Topics</a>
             <Link href="/library" className="hover:text-dark transition-colors">Library</Link>
+            <Link href="/feedback" className="hover:text-dark transition-colors">Feedback</Link>
           </div>
           <a
             href="#workout"
