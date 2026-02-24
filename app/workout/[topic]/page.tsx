@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useState, useMemo, useRef, useEffect, Suspense } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useChat } from '@ai-sdk/react';
 import { TextStreamChatTransport, type UIMessage } from 'ai';
 import {
@@ -19,6 +19,7 @@ import {
 import { generateWorkout } from '@/lib/problems/generator';
 import { SLUG_TO_TOPIC, TOPIC_META } from '@/lib/problems/types';
 import type { Problem, TopicId } from '@/lib/problems/types';
+import { saveSession, loadSession, clearActiveSession } from '@/lib/workout-session';
 
 // ─── Coach Panel ──────────────────────────────────────────────────────────────
 
@@ -200,26 +201,45 @@ function FinishedScreen({
 
 // ─── Main Workout Page ────────────────────────────────────────────────────────
 
-export default function WorkoutPage() {
+function WorkoutPageInner() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const slug = typeof params.topic === 'string' ? params.topic : 'angles';
   const topicId: TopicId = SLUG_TO_TOPIC[slug] ?? 'angles';
   const topicLabel = TOPIC_META[topicId].label;
+  const mode = (searchParams.get('mode') ?? 'daily') as 'daily' | 'practice';
+  const urlSeed = searchParams.get('seed');
 
-  const [key, setKey] = useState(0); // increment to reset workout
-  const problems: Problem[] = useMemo(
-    () => generateWorkout(topicId, new Date()),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [topicId, key]
+  const dailySeed = new Date().toISOString().split('T')[0];
+  const [practiceSeed, setPracticeSeed] = useState(
+    () => urlSeed ?? crypto.randomUUID()
   );
 
+  const currentSeed = mode === 'daily' ? dailySeed : practiceSeed;
+
+  const problems: Problem[] = useMemo(() => {
+    return generateWorkout(topicId, currentSeed);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topicId, currentSeed]);
+
+  const [startedAt] = useState(() => new Date().toISOString());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const [coachOpen, setCoachOpen] = useState(false);
+
+  // Restore session on mount
+  useEffect(() => {
+    const session = loadSession(topicId, mode, currentSeed);
+    if (session && !session.completedAt && session.currentIndex > 0) {
+      setCurrentIndex(session.currentIndex);
+      setScore(session.score);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const problem = problems[currentIndex];
   const isCorrect = selectedIndex === problem?.correctIndex;
@@ -232,18 +252,22 @@ export default function WorkoutPage() {
   }
 
   function handleNext() {
-    if (currentIndex + 1 >= problems.length) {
+    const nextIndex = currentIndex + 1;
+    if (nextIndex >= problems.length) {
       setFinished(true);
+      saveSession({ topic: topicId, mode, seed: currentSeed, currentIndex: nextIndex, score, totalQuestions: problems.length, startedAt, completedAt: new Date().toISOString() });
     } else {
-      setCurrentIndex((i) => i + 1);
+      setCurrentIndex(nextIndex);
       setSelectedIndex(null);
       setAnswered(false);
       setCoachOpen(false);
+      saveSession({ topic: topicId, mode, seed: currentSeed, currentIndex: nextIndex, score, totalQuestions: problems.length, startedAt, completedAt: null });
     }
   }
 
   function handleRetry() {
-    setKey((k) => k + 1);
+    clearActiveSession(topicId);
+    if (mode === 'practice') setPracticeSeed(crypto.randomUUID());
     setCurrentIndex(0);
     setSelectedIndex(null);
     setAnswered(false);
@@ -288,9 +312,15 @@ export default function WorkoutPage() {
               className="flex items-center gap-1.5 text-sm font-medium text-muted hover:text-dark transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
-              Home
+              <Dumbbell className="h-4 w-4" />
+              <span className="font-bold text-dark">Geometry Gym</span>
             </button>
-            <span className="text-sm font-semibold text-dark">{topicLabel}</span>
+            <div className="text-center">
+              <span className="text-sm font-semibold text-dark">{topicLabel}</span>
+              <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-semibold ${mode === 'daily' ? 'bg-primary/10 text-primary' : 'bg-green-100 text-green-700'}`}>
+                {mode === 'daily' ? 'Daily Workout' : 'Open Gym'}
+              </span>
+            </div>
             <span className="text-sm text-muted">
               {currentIndex + 1} / {problems.length}
             </span>
@@ -309,7 +339,7 @@ export default function WorkoutPage() {
         </div>
 
         {/* Question card */}
-        <div className="flex flex-1 flex-col items-center px-6 py-10">
+        <div className={`flex flex-1 flex-col items-center px-6 py-10 ${answered ? 'pb-56' : ''}`}>
           <div className="w-full max-w-2xl">
 
             {/* Difficulty badge */}
@@ -331,15 +361,15 @@ export default function WorkoutPage() {
                 const isCorrectChoice = idx === problem.correctIndex;
 
                 let style =
-                  'border border-border bg-white text-dark hover:border-primary/50 hover:bg-orange-50';
+                  'border-2 border-b-4 border-gray-200 bg-white text-dark hover:border-primary/40 hover:bg-orange-50 active:translate-y-[2px] active:border-b-2 transition-all duration-75';
 
                 if (answered) {
                   if (isCorrectChoice) {
-                    style = 'border-2 border-green-500 bg-green-50 text-green-800';
+                    style = 'border-2 border-b-4 border-green-400 bg-green-50 text-green-800';
                   } else if (isSelected && !isCorrectChoice) {
-                    style = 'border-2 border-red-400 bg-red-50 text-red-800';
+                    style = 'border-2 border-b-4 border-red-400 bg-red-50 text-red-800';
                   } else {
-                    style = 'border border-border bg-white text-muted opacity-60';
+                    style = 'border-2 border-b-4 border-gray-100 bg-white text-dark opacity-40';
                   }
                 }
 
@@ -362,41 +392,6 @@ export default function WorkoutPage() {
               })}
             </div>
 
-            {/* Feedback + actions */}
-            {answered && (
-              <div className="mt-6 space-y-4">
-                <div
-                  className={`rounded-xl p-4 text-sm leading-relaxed ${
-                    isCorrect
-                      ? 'bg-green-50 text-green-800'
-                      : 'bg-red-50 text-red-800'
-                  }`}
-                >
-                  <p className="font-semibold mb-1">
-                    {isCorrect ? 'Correct!' : 'Not quite.'}
-                  </p>
-                  <p>{problem.explanation}</p>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <button
-                    onClick={() => setCoachOpen((o) => !o)}
-                    className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-muted transition-colors hover:border-primary/50 hover:text-primary"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    Ask Coach
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-                  >
-                    {currentIndex + 1 >= problems.length ? 'Finish' : 'Next'}
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            )}
-
             {/* Ask Coach button (before answering) */}
             {!answered && (
               <div className="mt-6">
@@ -414,6 +409,51 @@ export default function WorkoutPage() {
         </div>
       </div>
 
+      {/* Bottom feedback panel */}
+      {answered && problem && (
+        <div
+          style={{ animation: 'slideUp 0.25s ease-out' }}
+          className={`fixed bottom-0 left-0 right-0 z-30 px-6 pt-5 pb-8 shadow-[0_-4px_24px_rgba(0,0,0,0.12)] ${
+            isCorrect ? 'bg-green-500' : 'bg-red-400'
+          }`}
+        >
+          <div className="mx-auto max-w-2xl">
+            <div className="flex items-center gap-2 mb-1">
+              {isCorrect
+                ? <CheckCircle2 className="h-6 w-6 text-white" />
+                : <XCircle className="h-6 w-6 text-white" />
+              }
+              <span className="text-xl font-extrabold text-white">
+                {isCorrect ? 'Correct!' : 'Not quite.'}
+              </span>
+            </div>
+            <p className="text-white/90 text-sm mb-5 leading-relaxed">
+              {problem.explanation}
+            </p>
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setCoachOpen((o) => !o)}
+                className="flex items-center gap-2 text-sm font-semibold text-white/80 hover:text-white transition-colors"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Ask Coach
+              </button>
+              <button
+                onClick={handleNext}
+                className={`flex items-center gap-2 px-8 py-3 rounded-2xl font-extrabold text-base border-b-4 active:translate-y-[2px] active:border-b-2 transition-all duration-75 ${
+                  isCorrect
+                    ? 'bg-white text-green-600 border-green-200 hover:bg-green-50'
+                    : 'bg-white text-red-500 border-red-200 hover:bg-red-50'
+                }`}
+              >
+                {currentIndex + 1 >= problems.length ? 'Finish' : 'Continue'}
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Coach panel */}
       {coachOpen && problem && (
         <div className="flex w-full max-w-sm flex-col border-l border-border bg-white sm:w-80 fixed right-0 top-0 h-full z-20 shadow-xl">
@@ -425,5 +465,13 @@ export default function WorkoutPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function WorkoutPage() {
+  return (
+    <Suspense>
+      <WorkoutPageInner />
+    </Suspense>
   );
 }

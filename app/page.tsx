@@ -1,54 +1,55 @@
-import { Dumbbell, Triangle, Compass, Square, Box, MapPin, ArrowRight, Flame, ChevronRight } from "lucide-react";
+import { Dumbbell, Layers, Triangle, Ruler, Box, MapPin, ArrowRight, Flame, ChevronRight, Zap } from "lucide-react";
 import Link from "next/link";
+import { ContinueWorkoutBanner } from "@/components/ContinueWorkoutBanner";
 
 const muscleGroups = [
   {
-    icon: Triangle,
-    title: "Shapes & Polygons",
-    description: "Triangles, quadrilaterals, circles, and everything in between.",
-    reps: "24 reps",
-    href: "/workout/shapes",
-    available: false,
-  },
-  {
-    icon: Compass,
-    title: "Angles",
-    description: "Types of angles, angle relationships, and how to measure them.",
-    reps: "23 reps",
-    href: "/workout/angles",
+    icon: Layers,
+    title: "Foundations",
+    description: "Points, lines, rays, planes, and angles — the building blocks of all geometry.",
+    reps: "27 reps",
+    href: "/workout/foundations",
     available: true,
   },
   {
-    icon: Square,
-    title: "Area & Perimeter",
-    description: "How much space a shape takes up and how far it is around the edge.",
-    reps: "30 reps",
-    href: "/workout/area-perimeter",
-    available: false,
+    icon: Triangle,
+    title: "Shape & Form",
+    description: "Polygons, triangles, symmetry — recognise, classify, and reason about shapes.",
+    reps: "24 reps",
+    href: "/workout/shape-form",
+    available: true,
+  },
+  {
+    icon: Ruler,
+    title: "The Measurement Room",
+    description: "Area and perimeter — how much space a shape holds and how far it is around the edge.",
+    reps: "19 reps",
+    href: "/workout/measurement",
+    available: true,
   },
   {
     icon: Box,
-    title: "Volume & Surface Area",
-    description: "3D shapes, the space they hold, and the surface that wraps them.",
-    reps: "20 reps",
+    title: "Heavy Lifts",
+    description: "Volume and surface area — 3D shapes, the space they hold, and the surface that wraps them.",
+    reps: "15 reps",
     href: "/workout/volume",
-    available: false,
+    available: true,
   },
   {
     icon: MapPin,
-    title: "The Coordinate Plane",
-    description: "Plotting points, reading graphs, and understanding position in space.",
-    reps: "16 reps",
+    title: "The Track",
+    description: "Coordinates and transformations — plotting points, sliding, flipping, and rotating shapes.",
+    reps: "18 reps",
     href: "/workout/coordinates",
-    available: false,
+    available: true,
   },
   {
-    icon: Dumbbell,
-    title: "The Pythagorean Theorem",
-    description: "The relationship between the sides of a right triangle. Classic and powerful.",
-    reps: "12 reps",
-    href: "/workout/pythagorean",
-    available: false,
+    icon: Zap,
+    title: "Power Movement",
+    description: "Pythagorean theorem, congruence, and similarity — the heavy-hitting theorems of geometry.",
+    reps: "18 reps",
+    href: "/workout/power",
+    available: true,
   },
 ];
 
@@ -101,10 +102,10 @@ export default function Home() {
   });
 
   return (
-    <div className="relative min-h-screen bg-white text-dark font-sans overflow-x-hidden">
+    <div className="relative min-h-screen bg-white text-dark font-sans">
 
       {/* Decorative geometry shape watermark */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         {bgShapes.map(({ type, top, left, size, rotate }) => (
           <svg
             key={`${type}-${top}-${left}`}
@@ -188,12 +189,12 @@ export default function Home() {
       </div>
 
       {/* Nav */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur-sm relative">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Dumbbell className="h-6 w-6 text-primary" />
             <span className="text-lg font-bold tracking-tight">Geometry Gym</span>
-          </div>
+          </Link>
           <div className="hidden items-center gap-8 text-sm font-medium text-muted sm:flex">
             <a href="#workout" className="hover:text-dark transition-colors">Daily Workout</a>
             <a href="#topics" className="hover:text-dark transition-colors">Topics</a>
@@ -210,7 +211,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="mx-auto max-w-6xl px-6 pt-20 pb-16 text-center">
+      <section className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-16 text-center">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-muted">
           <Flame className="h-3 w-3 text-primary" />
           Daily geometry training
@@ -226,7 +227,7 @@ export default function Home() {
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
-            href="/workout/angles"
+            href="/workout/foundations?mode=daily"
             className="flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark"
           >
             Today&apos;s Workout
@@ -241,8 +242,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Resume banner — only visible when there's an active session */}
+      <ContinueWorkoutBanner />
+
       {/* Today's Workout Card */}
-      <section id="workout" className="mx-auto max-w-6xl px-6 pb-20">
+      <section id="workout" className="relative z-10 mx-auto max-w-6xl px-6 pb-20">
         <div className="overflow-hidden rounded-2xl border border-border bg-surface">
           <div className="flex items-center justify-between border-b border-border bg-white px-8 py-5">
             <div>
@@ -267,7 +271,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col justify-center px-8 py-6">
               <Link
-                href="/workout/angles"
+                href="/workout/foundations?mode=daily"
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-semibold text-white transition-colors hover:bg-primary-dark"
               >
                 Start Workout
@@ -279,8 +283,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* How It Works */}
+      <section id="how-it-works" className="relative z-10 bg-gradient-to-b from-white via-orange-50 to-white py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-12 text-center">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary">The Plan</p>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-dark sm:text-4xl">
+              How It Works
+            </h2>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-3">
+            {steps.map((step) => (
+              <div key={step.number} className="flex flex-col gap-4">
+                <div className="text-5xl font-extrabold text-primary/20 leading-none">
+                  {step.number}
+                </div>
+                <h3 className="text-lg font-bold text-dark">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-muted">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Muscle Groups / Topics */}
-      <section id="topics" className="bg-surface py-20">
+      <section id="topics" className="relative z-10 py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary">The Training Floor</p>
@@ -327,7 +355,7 @@ export default function Home() {
               );
 
               return group.available ? (
-                <Link key={group.title} href={group.href} className={cardClass}>
+                <Link key={group.title} href={`${group.href}?mode=practice`} className={cardClass}>
                   {inner}
                 </Link>
               ) : (
@@ -340,32 +368,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 text-center">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">The Plan</p>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-dark sm:text-4xl">
-              How It Works
-            </h2>
-          </div>
-
-          <div className="grid gap-8 sm:grid-cols-3">
-            {steps.map((step) => (
-              <div key={step.number} className="flex flex-col gap-4">
-                <div className="text-5xl font-extrabold text-primary/20 leading-none">
-                  {step.number}
-                </div>
-                <h3 className="text-lg font-bold text-dark">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-muted">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="border-t border-border py-10">
+      <footer className="relative z-10 border-t border-border py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-6 text-center sm:flex-row sm:justify-between">
           <div className="flex items-center gap-2 text-sm font-semibold text-dark">
             <Dumbbell className="h-4 w-4 text-primary" />

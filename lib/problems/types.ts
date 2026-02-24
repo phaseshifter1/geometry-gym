@@ -3,12 +3,12 @@ import type { Rng } from './rng';
 export type Difficulty = 'warm-up' | 'main-set' | 'max-out';
 
 export type TopicId =
-  | 'angles'
-  | 'shapes'
-  | 'area-perimeter'
+  | 'foundations'
+  | 'shape-form'
+  | 'measurement'
   | 'volume'
   | 'coordinates'
-  | 'pythagorean';
+  | 'power';
 
 export interface Problem {
   id: string;
@@ -34,12 +34,12 @@ export interface RawQuestion {
 export type QuestionFactory = (rng: Rng) => RawQuestion;
 
 export const TOPIC_META: Record<TopicId, { label: string; slug: string }> = {
-  angles:          { label: 'Angles',                   slug: 'angles' },
-  shapes:          { label: 'Shapes & Polygons',         slug: 'shapes' },
-  'area-perimeter':{ label: 'Area & Perimeter',          slug: 'area-perimeter' },
-  volume:          { label: 'Volume & Surface Area',     slug: 'volume' },
-  coordinates:     { label: 'The Coordinate Plane',      slug: 'coordinates' },
-  pythagorean:     { label: 'The Pythagorean Theorem',   slug: 'pythagorean' },
+  foundations:  { label: 'Foundations',           slug: 'foundations' },
+  'shape-form': { label: 'Shape & Form',           slug: 'shape-form' },
+  measurement:  { label: 'The Measurement Room',   slug: 'measurement' },
+  volume:       { label: 'Heavy Lifts',            slug: 'volume' },
+  coordinates:  { label: 'The Track',              slug: 'coordinates' },
+  power:        { label: 'Power Movement',         slug: 'power' },
 };
 
 export const SLUG_TO_TOPIC: Record<string, TopicId> = Object.fromEntries(

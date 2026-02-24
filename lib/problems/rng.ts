@@ -25,10 +25,8 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-export function createRng(date: Date, topic: string): Rng {
-  const dateStr = date.toISOString().split('T')[0];
-  const seed = hashStr(dateStr + ':' + topic);
-  const rand = mulberry32(seed);
+export function createRng(seed: string): Rng {
+  const rand = mulberry32(hashStr(seed));
 
   return {
     next: rand,

@@ -1,13 +1,22 @@
 import { createRng } from './rng';
 import type { Problem, TopicId, RawQuestion } from './types';
-import { anglesQuestions } from './topics/angles';
+import { foundationsQuestions } from './topics/foundations';
+import { shapeFormQuestions } from './topics/shape-form';
+import { measurementQuestions } from './topics/measurement';
+import { volumeQuestions } from './topics/volume';
+import { coordinatesQuestions } from './topics/coordinates';
+import { powerQuestions } from './topics/power';
 
 const QUESTIONS_PER_WORKOUT = 10;
 
 function getFactories(topic: TopicId) {
   switch (topic) {
-    case 'angles': return anglesQuestions;
-    default: return anglesQuestions; // expand as more topics are built
+    case 'foundations':  return foundationsQuestions;
+    case 'shape-form':   return shapeFormQuestions;
+    case 'measurement':  return measurementQuestions;
+    case 'volume':       return volumeQuestions;
+    case 'coordinates':  return coordinatesQuestions;
+    case 'power':        return powerQuestions;
   }
 }
 
@@ -32,11 +41,11 @@ function buildProblem(
   };
 }
 
-export function generateWorkout(topic: TopicId, date: Date): Problem[] {
-  const rng = createRng(date, topic);
+export function generateWorkout(topic: TopicId, seed: string): Problem[] {
+  const rng = createRng(`${seed}:${topic}`);
   const factories = getFactories(topic);
 
-  // Pick QUESTIONS_PER_WORKOUT factories without replacement (sample from bank)
+  // Pick QUESTIONS_PER_WORKOUT factories without replacement
   const selected = rng.sample(factories, Math.min(QUESTIONS_PER_WORKOUT, factories.length));
 
   // If bank is smaller than needed, pad with repeats
