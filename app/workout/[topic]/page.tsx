@@ -312,7 +312,7 @@ function WorkoutPageInner() {
               className="flex items-center gap-1.5 text-sm font-medium text-muted hover:text-dark transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
-              <Dumbbell className="h-4 w-4" />
+              <Dumbbell className="h-4 w-4 text-primary" />
               <span className="font-bold text-dark">Geometry Gym</span>
             </button>
             <div className="text-center">
