@@ -91,7 +91,7 @@ ${knowledgeBlock}${contextBlock}`;
     model: anthropic('claude-haiku-4-5-20251001'),
     system: systemPrompt,
     messages: modelMessages,
-    maxTokens: 400,
+    maxOutputTokens: 400,
   });
 
   return result.toTextStreamResponse();
