@@ -39,7 +39,7 @@ Write 2-3 warm, encouraging sentences that connect this topic to real life and w
 Do not mention their score or performance. Do not say "great job" or use generic praise.
 Speak to anyone — you don't know their age or background. Keep it honest, grounded, and briefly inspiring.
 Focus on what this kind of thinking unlocks in the real world.`,
-    maxTokens: 120,
+    maxOutputTokens: 120,
   });
 
   return new Response(JSON.stringify({ insight: text }), {
