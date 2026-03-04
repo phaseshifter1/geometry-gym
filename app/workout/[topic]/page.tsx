@@ -20,6 +20,8 @@ import { generateWorkout } from '@/lib/problems/generator';
 import { SLUG_TO_TOPIC, TOPIC_META } from '@/lib/problems/types';
 import type { Problem, TopicId } from '@/lib/problems/types';
 import { saveSession, loadSession, clearActiveSession } from '@/lib/workout-session';
+import { useUser, saveWorkoutToDb } from '@/lib/auth';
+import { createClient } from '@/lib/supabase/browser';
 
 // ─── Coach Panel ──────────────────────────────────────────────────────────────
 
@@ -161,15 +163,31 @@ function FinishedScreen({
   score,
   total,
   topicLabel,
+  isSignedIn,
   onRetry,
   onHome,
 }: {
   score: number;
   total: number;
   topicLabel: string;
+  isSignedIn: boolean;
   onRetry: () => void;
   onHome: () => void;
 }) {
+  const [promptDismissed, setPromptDismissed] = useState(false);
+  const [insight, setInsight] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/insight', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topicLabel }),
+    })
+      .then((r) => r.json())
+      .then((data) => setInsight(data.insight ?? null))
+      .catch(() => null);
+  }, [topicLabel]);
+
   const pct = Math.round((score / total) * 100);
   const message =
     pct === 100
@@ -177,8 +195,16 @@ function FinishedScreen({
       : pct >= 80
       ? 'Great workout! You nailed most of these.'
       : pct >= 60
-      ? 'Solid effort. Keep training and you\'ll get stronger.'
+      ? "Solid effort. Keep training and you'll get stronger."
       : 'Good start. Every rep counts — come back tomorrow!';
+
+  async function handleSignIn() {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${location.origin}/auth/callback` },
+    });
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
@@ -191,7 +217,40 @@ function FinishedScreen({
         {topicLabel}
       </p>
       <p className="mx-auto mt-6 max-w-sm text-base text-muted">{message}</p>
-      <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
+
+      {/* AI insight */}
+      <p className="mx-auto mt-4 max-w-md text-base text-dark italic">
+        {insight ?? '\u00A0'}
+      </p>
+
+      {/* Soft save prompt — only shown to guests */}
+      {!isSignedIn && !promptDismissed && (
+        <div className="mt-8 mx-auto max-w-sm rounded-2xl border border-border bg-surface px-6 py-5 text-left">
+          <p className="font-semibold text-dark text-sm">
+            Want to save your progress?
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            Sign in with Google — it takes 2 seconds. Your scores are saved so
+            you can track your gains over time.
+          </p>
+          <div className="mt-4 flex items-center gap-3">
+            <button
+              onClick={handleSignIn}
+              className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+            >
+              Sign in with Google
+            </button>
+            <button
+              onClick={() => setPromptDismissed(true)}
+              className="text-sm text-muted hover:text-dark transition-colors"
+            >
+              No thanks
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
         <button
           onClick={onRetry}
           className="flex items-center gap-2 rounded-full border border-border px-6 py-3 font-semibold text-dark transition-colors hover:bg-surface"
@@ -241,6 +300,8 @@ function WorkoutPageInner() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topicId, currentSeed]);
 
+  const user = useUser();
+
   const [startedAt] = useState(() => new Date().toISOString());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -274,6 +335,9 @@ function WorkoutPageInner() {
     if (nextIndex >= problems.length) {
       setFinished(true);
       saveSession({ topic: topicId, mode, seed: currentSeed, currentIndex: nextIndex, score, totalQuestions: problems.length, startedAt, completedAt: new Date().toISOString() });
+      if (user) {
+        saveWorkoutToDb({ topic: topicId, score, total: problems.length });
+      }
     } else {
       setCurrentIndex(nextIndex);
       setSelectedIndex(null);
@@ -300,6 +364,7 @@ function WorkoutPageInner() {
         score={score}
         total={problems.length}
         topicLabel={topicLabel}
+        isSignedIn={!!user}
         onRetry={handleRetry}
         onHome={() => router.push('/')}
       />
