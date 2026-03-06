@@ -207,6 +207,20 @@ export default async function ProgressPage() {
             </Link>
           </div>
         )}
+
+        {/* Feedback callout */}
+        <div className="mt-12 rounded-2xl border border-primary/20 bg-primary/5 px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <p className="font-bold text-dark">How is Geometry Gym working for you?</p>
+            <p className="mt-1 text-sm text-muted">Your feedback shapes what gets built next. It takes 2 minutes.</p>
+          </div>
+          <Link
+            href="/feedback"
+            className="shrink-0 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+          >
+            Share feedback →
+          </Link>
+        </div>
       </main>
     </div>
   );
