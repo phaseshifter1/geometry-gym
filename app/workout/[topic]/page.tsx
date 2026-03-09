@@ -539,34 +539,25 @@ function WorkoutPageInner() {
       {answered && problem && (
         <div
           style={{ animation: 'slideUp 0.25s ease-out' }}
-          className={`fixed bottom-0 left-0 right-0 z-30 px-6 pt-5 pb-8 shadow-[0_-4px_24px_rgba(0,0,0,0.12)] ${
+          className={`fixed bottom-4 left-0 right-0 z-30 w-full max-w-2xl px-8 py-6 rounded-2xl shadow-xl mx-auto ${
             isCorrect ? 'bg-green-800' : 'bg-red-700'
           }`}
         >
-          <div className="mx-auto max-w-2xl">
-            <div className="flex items-center gap-2 mb-1">
-              {isCorrect
-                ? <CheckCircle2 className="h-6 w-6 text-white" />
-                : <XCircle className="h-6 w-6 text-white" />
-              }
-              <span className="text-2xl font-extrabold text-white">
-                {isCorrect ? 'Correct!' : 'Not quite.'}
-              </span>
-            </div>
-            <p className="text-white text-base mb-5 leading-relaxed">
-              {problem.explanation}
-            </p>
-            <div className="flex items-center justify-between">
-              <button
-                onClick={() => setCoachOpen((o) => !o)}
-                className="flex items-center gap-2 text-sm font-semibold text-white/80 hover:text-white transition-colors"
-              >
-                <MessageCircle className="h-4 w-4" />
-                Ask Coach
-              </button>
+          <div>
+            {/* Top row: status + continue */}
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                {isCorrect
+                  ? <CheckCircle2 className="h-5 w-5 text-white" />
+                  : <XCircle className="h-5 w-5 text-white" />
+                }
+                <span className="text-2xl font-extrabold text-white">
+                  {isCorrect ? 'Correct!' : 'Not quite.'}
+                </span>
+              </div>
               <button
                 onClick={handleNext}
-                className={`flex items-center gap-2 px-8 py-3 rounded-2xl font-extrabold text-base border-b-4 active:translate-y-[2px] active:border-b-2 transition-all duration-75 ${
+                className={`flex items-center gap-2 px-6 py-2 rounded-2xl font-extrabold text-sm border-b-4 active:translate-y-[2px] active:border-b-2 transition-all duration-75 ${
                   isCorrect
                     ? 'bg-white text-green-600 border-green-200 hover:bg-green-50'
                     : 'bg-white text-red-500 border-red-200 hover:bg-red-50'
@@ -576,6 +567,10 @@ function WorkoutPageInner() {
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
+            {/* Explanation */}
+            <p className="text-white/90 text-base leading-relaxed mt-3">
+              {problem.explanation}
+            </p>
           </div>
         </div>
       )}
@@ -584,7 +579,7 @@ function WorkoutPageInner() {
       <button
         onClick={() => setCoachOpen((o) => !o)}
         className="fixed z-50 flex flex-col items-center gap-2 px-2 py-4 rounded-l-xl shadow-lg text-white font-semibold text-sm"
-        style={{ backgroundColor: '#F97316', right: coachOpen ? '320px' : '0', top: '50%', transform: 'translateY(-50%)', transition: 'right 0.2s ease' }}
+        style={{ backgroundColor: '#F97316', right: coachOpen ? '320px' : '0', top: '50%', transform: 'translateY(-50%)' }}
       >
         <MessageCircle className="h-4 w-4" />
         <span style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', letterSpacing: '0.05em' }}>
@@ -595,8 +590,7 @@ function WorkoutPageInner() {
       {/* Coach panel */}
       {coachOpen && problem && (
         <div
-          className="flex w-full max-w-sm flex-col border-l border-border bg-white sm:w-80 fixed right-0 top-0 z-40 shadow-xl"
-          style={{ bottom: answered ? '140px' : '0' }}
+          className="flex w-full max-w-sm flex-col border-l border-border bg-white sm:w-80 fixed right-0 top-0 bottom-0 z-40 shadow-xl"
         >
           <CoachPanel
             problem={problem}

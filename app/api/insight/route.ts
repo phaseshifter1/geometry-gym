@@ -38,7 +38,8 @@ export async function POST(req: Request) {
 Write 2-3 warm, encouraging sentences that connect this topic to real life and why training it matters.
 Do not mention their score or performance. Do not say "great job" or use generic praise.
 Speak to anyone — you don't know their age or background. Keep it honest, grounded, and briefly inspiring.
-Focus on what this kind of thinking unlocks in the real world.`,
+Focus on what this kind of thinking unlocks in the real world.
+Output plain text only — no markdown, no headers, no bullet points, no formatting of any kind. Just sentences.
     maxOutputTokens: 120,
   });
 
