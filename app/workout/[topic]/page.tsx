@@ -475,18 +475,17 @@ function WorkoutPageInner() {
               })}
             </div>
 
-            {/* Ask Coach button (before answering) */}
-            {!answered && (
-              <div className="mt-6">
-                <button
-                  onClick={() => setCoachOpen((o) => !o)}
-                  className="flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-primary"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  Ask Coach
-                </button>
-              </div>
-            )}
+
+            {/* Ask Coach button below answers */}
+            <div className="mt-6">
+              <button
+                onClick={() => setCoachOpen((o) => !o)}
+                className="flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-primary"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Ask Coach
+              </button>
+            </div>
 
           </div>
         </div>
@@ -537,9 +536,24 @@ function WorkoutPageInner() {
         </div>
       )}
 
+      {/* Ask Coach tab — always visible on right edge */}
+      <button
+        onClick={() => setCoachOpen((o) => !o)}
+        className="fixed z-50 flex flex-col items-center gap-2 px-2 py-4 rounded-l-xl shadow-lg text-white font-semibold text-sm"
+        style={{ backgroundColor: '#F97316', right: coachOpen ? '320px' : '0', top: '50%', transform: 'translateY(-50%)', transition: 'right 0.2s ease' }}
+      >
+        <MessageCircle className="h-4 w-4" />
+        <span style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', letterSpacing: '0.05em' }}>
+          Ask Coach
+        </span>
+      </button>
+
       {/* Coach panel */}
       {coachOpen && problem && (
-        <div className="flex w-full max-w-sm flex-col border-l border-border bg-white sm:w-80 fixed right-0 top-0 h-full z-20 shadow-xl">
+        <div
+          className="flex w-full max-w-sm flex-col border-l border-border bg-white sm:w-80 fixed right-0 top-0 z-40 shadow-xl"
+          style={{ bottom: answered ? '140px' : '0' }}
+        >
           <CoachPanel
             problem={problem}
             selectedIndex={selectedIndex}
