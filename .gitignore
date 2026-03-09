@@ -40,6 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# internal docs (not for public repo)
+/docs
+
 # Playwright
 node_modules/
 /test-results/
