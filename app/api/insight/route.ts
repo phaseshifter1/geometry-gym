@@ -1,8 +1,6 @@
 import { anthropic } from '@ai-sdk/anthropic';
 import { generateText } from 'ai';
 
-export const runtime = 'edge';
-
 // ─── Rate limiting ──────────────────────────────────────────────────────────
 const rateLimitMap = new Map<string, number[]>();
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -29,18 +27,30 @@ export async function POST(req: Request) {
     });
   }
 
-  const { topicLabel }: { topicLabel: string } = await req.json();
+  const { topicLabel, interest }: { topicLabel: string; interest?: string | null } =
+    await req.json();
+
+  // Sanitise interest before injecting into prompt (defence-in-depth)
+  const safeInterest =
+    typeof interest === 'string' && interest.trim().length > 0
+      ? interest.replace(/[^\w\s.,!?''\-]/g, '').trim().slice(0, 50)
+      : null;
+
+  const interestClause = safeInterest
+    ? `The student is interested in: "${safeInterest}". You must ground at least one sentence in a specific, concrete example from "${safeInterest}" — not a vague mention, but a real detail (e.g. if football: pitch markings, angles of a pass, the arc of a free kick, field dimensions). Make the connection feel like something only a "${safeInterest}" person would notice.`
+    : '';
 
   const { text } = await generateText({
     model: anthropic('claude-haiku-4-5-20251001'),
+    maxOutputTokens: 160,
+    temperature: 1,
     prompt: `A student just completed a geometry workout on the topic: "${topicLabel}".
-
+${interestClause}
 Write 2-3 warm, encouraging sentences that connect this topic to real life and why training it matters.
 Do not mention their score or performance. Do not say "great job" or use generic praise.
-Speak to anyone — you don't know their age or background. Keep it honest, grounded, and briefly inspiring.
-Focus on what this kind of thinking unlocks in the real world.
-Output plain text only — no markdown, no headers, no bullet points, no formatting of any kind. Just sentences.
-    maxOutputTokens: 120,
+Keep it honest, grounded, and briefly inspiring.
+Assume a North American audience — for example, "football" means American football (NFL, touchdowns, yard lines), not soccer.
+Output plain text only — no markdown, no headers, no bullet points, no formatting of any kind. Just sentences.`,
   });
 
   return new Response(JSON.stringify({ insight: text }), {

@@ -178,14 +178,23 @@ function FinishedScreen({
   const [insight, setInsight] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/insight', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topicLabel }),
-    })
-      .then((r) => r.json())
-      .then((data) => setInsight(data.insight ?? null))
-      .catch(() => null);
+    const controller = new AbortController();
+
+    async function fetchInsight() {
+      const interest = localStorage.getItem('gg:interest') || null;
+
+      const res = await fetch('/api/insight', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topicLabel, interest }),
+        signal: controller.signal,
+      });
+      const data = await res.json();
+      setInsight(data.insight ?? null);
+    }
+
+    fetchInsight().catch(() => null);
+    return () => controller.abort();
   }, [topicLabel]);
 
   const pct = Math.round((score / total) * 100);
@@ -294,11 +303,12 @@ function WorkoutPageInner() {
   );
 
   const currentSeed = mode === 'daily' ? dailySeed : practiceSeed;
+  const [choiceSeed, setChoiceSeed] = useState(() => crypto.randomUUID());
 
   const problems: Problem[] = useMemo(() => {
-    return generateWorkout(topicId, currentSeed);
+    return generateWorkout(topicId, currentSeed, choiceSeed);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topicId, currentSeed]);
+  }, [topicId, currentSeed, choiceSeed]);
 
   const user = useUser();
 
@@ -388,6 +398,7 @@ function WorkoutPageInner() {
   function handleRetry() {
     clearActiveSession(topicId);
     if (mode === 'practice') setPracticeSeed(crypto.randomUUID());
+    setChoiceSeed(crypto.randomUUID());
     setCurrentIndex(0);
     setSelectedIndex(null);
     setAnswered(false);

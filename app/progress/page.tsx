@@ -4,6 +4,7 @@ import { Dumbbell } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { TOPIC_META } from '@/lib/problems/types';
 import type { TopicId } from '@/lib/problems/types';
+import { InterestField } from '@/components/InterestField';
 
 interface WorkoutSession {
   id: string;
@@ -31,12 +32,16 @@ export default async function ProgressPage() {
 
   if (!user) redirect('/');
 
-  const { data } = await supabase
-    .from('workout_sessions')
-    .select('*')
-    .order('completed_at', { ascending: false });
+  const [{ data }, { data: profileData }] = await Promise.all([
+    supabase
+      .from('workout_sessions')
+      .select('*')
+      .order('completed_at', { ascending: false }),
+    supabase.from('profiles').select('interest').eq('id', user.id).single(),
+  ]);
 
   const sessions: WorkoutSession[] = data ?? [];
+  const interest: string | null = profileData?.interest ?? null;
 
   const totalQuestions = sessions.reduce((sum, s) => sum + s.total, 0);
   const totalCorrect = sessions.reduce((sum, s) => sum + s.score, 0);
@@ -121,6 +126,11 @@ export default async function ProgressPage() {
               Topics Explored
             </p>
           </div>
+        </div>
+
+        {/* Interests */}
+        <div className="mt-4">
+          <InterestField initial={interest} />
         </div>
 
         {/* Per-topic table */}

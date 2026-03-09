@@ -41,8 +41,10 @@ function buildProblem(
   };
 }
 
-export function generateWorkout(topic: TopicId, seed: string): Problem[] {
+export function generateWorkout(topic: TopicId, seed: string, choiceSeed?: string): Problem[] {
   const rng = createRng(`${seed}:${topic}`);
+  // Separate RNG for choice order so retries can shuffle choices independently of question seed
+  const choiceRng = createRng(`${choiceSeed ?? seed}:${topic}:choices`);
   const factories = getFactories(topic);
 
   // Pick QUESTIONS_PER_WORKOUT factories without replacement
@@ -55,6 +57,6 @@ export function generateWorkout(topic: TopicId, seed: string): Problem[] {
 
   return selected.map((factory) => {
     const raw = factory(rng);
-    return buildProblem(raw, topic, (arr) => rng.shuffle(arr));
+    return buildProblem(raw, topic, (arr) => choiceRng.shuffle(arr));
   });
 }
