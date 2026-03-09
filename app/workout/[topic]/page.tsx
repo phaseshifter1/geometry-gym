@@ -309,6 +309,44 @@ function WorkoutPageInner() {
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const [coachOpen, setCoachOpen] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    function showNav() {
+      setNavVisible(true);
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+      hideTimer.current = setTimeout(() => setNavVisible(false), 3000);
+    }
+    function onMouseMove(e: MouseEvent) {
+      if (e.clientY < 80) {
+        setNavVisible(true);
+        if (hideTimer.current) clearTimeout(hideTimer.current);
+      } else {
+        showNav();
+      }
+    }
+    function onScroll() {
+      const y = window.scrollY;
+      if (y < lastScrollY.current) showNav();
+      else setNavVisible(false);
+      lastScrollY.current = y;
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'ArrowUp') showNav();
+    }
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('scroll', onScroll);
+    window.addEventListener('keydown', onKeyDown);
+    hideTimer.current = setTimeout(() => setNavVisible(false), 3000);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('keydown', onKeyDown);
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    };
+  }, []);
 
   // Restore session on mount
   useEffect(() => {
@@ -387,8 +425,11 @@ function WorkoutPageInner() {
       {/* Main content */}
       <div className="flex flex-1 flex-col">
 
-        {/* Top bar */}
-        <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
+        {/* Top bar — auto-hide */}
+        <div
+          className="fixed top-0 left-0 right-0 z-10 border-b border-border bg-white px-6 py-4 transition-transform duration-300"
+          style={{ transform: navVisible ? 'translateY(0)' : 'translateY(-100%)' }}
+        >
           <div className="mx-auto flex max-w-2xl items-center justify-between">
             <button
               onClick={() => router.push('/')}
@@ -420,6 +461,9 @@ function WorkoutPageInner() {
             </div>
           </div>
         </div>
+
+        {/* Spacer for fixed top bar */}
+        <div className="h-[81px]" />
 
         {/* Question card */}
         <div className={`flex flex-1 flex-col items-center px-6 py-10 ${answered ? 'pb-56' : ''}`}>
@@ -496,7 +540,7 @@ function WorkoutPageInner() {
         <div
           style={{ animation: 'slideUp 0.25s ease-out' }}
           className={`fixed bottom-0 left-0 right-0 z-30 px-6 pt-5 pb-8 shadow-[0_-4px_24px_rgba(0,0,0,0.12)] ${
-            isCorrect ? 'bg-green-500' : 'bg-red-400'
+            isCorrect ? 'bg-green-800' : 'bg-red-700'
           }`}
         >
           <div className="mx-auto max-w-2xl">
@@ -505,11 +549,11 @@ function WorkoutPageInner() {
                 ? <CheckCircle2 className="h-6 w-6 text-white" />
                 : <XCircle className="h-6 w-6 text-white" />
               }
-              <span className="text-xl font-extrabold text-white">
+              <span className="text-2xl font-extrabold text-white">
                 {isCorrect ? 'Correct!' : 'Not quite.'}
               </span>
             </div>
-            <p className="text-white/90 text-sm mb-5 leading-relaxed">
+            <p className="text-white text-base mb-5 leading-relaxed">
               {problem.explanation}
             </p>
             <div className="flex items-center justify-between">
