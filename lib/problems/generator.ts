@@ -38,6 +38,7 @@ function buildProblem(
     topic,
     difficulty: raw.difficulty,
     standard: raw.standard,
+    diagram: raw.diagram,
   };
 }
 
