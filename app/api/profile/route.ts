@@ -14,15 +14,18 @@ export async function GET() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return NextResponse.json({ interest: null }, { status: 401 });
+  if (!user) return NextResponse.json({ interest: null, interestId: null }, { status: 401 });
 
   const { data } = await supabase
     .from('profiles')
-    .select('interest')
+    .select('interest, current_interest_id')
     .eq('id', user.id)
     .single();
 
-  return NextResponse.json({ interest: data?.interest ?? null });
+  return NextResponse.json({
+    interest: data?.interest ?? null,
+    interestId: data?.current_interest_id ?? null,
+  });
 }
 
 export async function PATCH(req: Request) {
@@ -39,13 +42,27 @@ export async function PATCH(req: Request) {
       ? sanitizeInterest(body.interest)
       : null;
 
+  let interestId: string | null = null;
+
+  if (interest) {
+    // Append to interests history
+    const { data: inserted, error: insertError } = await supabase
+      .from('interests')
+      .insert({ user_id: user.id, value: interest })
+      .select('id')
+      .single();
+    if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 });
+    interestId = inserted.id;
+  }
+
   const { error } = await supabase.from('profiles').upsert({
     id: user.id,
     interest,
+    current_interest_id: interestId,
     updated_at: new Date().toISOString(),
   });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  return NextResponse.json({ interest });
+  return NextResponse.json({ interest, interestId });
 }

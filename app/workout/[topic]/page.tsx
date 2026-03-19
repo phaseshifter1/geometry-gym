@@ -15,6 +15,8 @@ import {
   Dumbbell,
   Trophy,
   RotateCcw,
+  ThumbsUp,
+  ThumbsDown,
 } from 'lucide-react';
 import { generateWorkout } from '@/lib/problems/generator';
 import { SLUG_TO_TOPIC, TOPIC_META } from '@/lib/problems/types';
@@ -177,6 +179,7 @@ function FinishedScreen({
 }) {
   const [promptDismissed, setPromptDismissed] = useState(false);
   const [insight, setInsight] = useState<string | null>(null);
+  const [feedbackState, setFeedbackState] = useState<'idle' | 'thankyou'>('idle');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -197,6 +200,23 @@ function FinishedScreen({
     fetchInsight().catch(() => null);
     return () => controller.abort();
   }, [topicLabel]);
+
+  async function submitFeedback(rating: boolean) {
+    if (!insight) return;
+    setFeedbackState('thankyou');
+    setTimeout(() => setFeedbackState('idle'), 2500);
+    const interestId = localStorage.getItem('gg:interest_id') || null;
+    await fetch('/api/insight-feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic: topicLabel,
+        interestId,
+        insightText: insight,
+        rating,
+      }),
+    }).catch(() => null);
+  }
 
   const pct = Math.round((score / total) * 100);
   const message =
@@ -232,6 +252,32 @@ function FinishedScreen({
       <p className="mx-auto mt-4 max-w-md text-base text-dark italic">
         {insight ?? '\u00A0'}
       </p>
+
+      {/* Insight feedback */}
+      {insight && (
+        <div className="mt-3 flex items-center justify-center gap-3 h-8">
+          {feedbackState === 'idle' ? (
+            <>
+              <button
+                onClick={() => submitFeedback(true)}
+                aria-label="Thumbs up"
+                className="text-muted hover:text-primary transition-colors"
+              >
+                <ThumbsUp className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => submitFeedback(false)}
+                aria-label="Thumbs down"
+                className="text-muted hover:text-primary transition-colors"
+              >
+                <ThumbsDown className="h-5 w-5" />
+              </button>
+            </>
+          ) : (
+            <p className="text-sm text-muted">Thank you for your feedback!</p>
+          )}
+        </div>
+      )}
 
       {/* Soft save prompt — only shown to guests */}
       {!isSignedIn && !promptDismissed && (

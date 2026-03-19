@@ -4,22 +4,28 @@ import { useState, useEffect, useRef } from 'react';
 import { Pencil } from 'lucide-react';
 
 const INTEREST_KEY = 'gg:interest';
+const INTEREST_ID_KEY = 'gg:interest_id';
 
-export function InterestField({ initial }: { initial: string | null }) {
+export function InterestField({ initial, initialId }: { initial: string | null; initialId: string | null }) {
   const [value, setValue] = useState(initial ?? '');
   const [saved, setSaved] = useState<string | null>(initial);
   const [editing, setEditing] = useState(initial === null);
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sync DB value to localStorage on mount — clear it if no interest is set
+  // Sync DB values to localStorage on mount — clear if no interest set
   useEffect(() => {
     if (initial) {
       localStorage.setItem(INTEREST_KEY, initial);
     } else {
       localStorage.removeItem(INTEREST_KEY);
     }
-  }, [initial]);
+    if (initialId) {
+      localStorage.setItem(INTEREST_ID_KEY, initialId);
+    } else {
+      localStorage.removeItem(INTEREST_ID_KEY);
+    }
+  }, [initial, initialId]);
 
   // Focus input when entering edit mode
   useEffect(() => {
@@ -32,15 +38,18 @@ export function InterestField({ initial }: { initial: string | null }) {
       return;
     }
     setStatus('saving');
-    await fetch('/api/profile', {
+    const res = await fetch('/api/profile', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ interest: value }),
     });
+    const data = await res.json();
     if (value.trim().length > 0) {
       localStorage.setItem(INTEREST_KEY, value.trim());
+      if (data.interestId) localStorage.setItem(INTEREST_ID_KEY, data.interestId);
     } else {
       localStorage.removeItem(INTEREST_KEY);
+      localStorage.removeItem(INTEREST_ID_KEY);
     }
     setSaved(value);
     setStatus('saved');

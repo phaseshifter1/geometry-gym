@@ -37,11 +37,12 @@ export default async function ProgressPage() {
       .from('workout_sessions')
       .select('*')
       .order('completed_at', { ascending: false }),
-    supabase.from('profiles').select('interest').eq('id', user.id).single(),
+    supabase.from('profiles').select('interest, current_interest_id').eq('id', user.id).single(),
   ]);
 
   const sessions: WorkoutSession[] = data ?? [];
   const interest: string | null = profileData?.interest ?? null;
+  const interestId: string | null = profileData?.current_interest_id ?? null;
 
   const totalQuestions = sessions.reduce((sum, s) => sum + s.total, 0);
   const totalCorrect = sessions.reduce((sum, s) => sum + s.score, 0);
@@ -130,7 +131,7 @@ export default async function ProgressPage() {
 
         {/* Interests */}
         <div className="mt-4">
-          <InterestField initial={interest} />
+          <InterestField initial={interest} initialId={interestId} />
         </div>
 
         {/* Per-topic table */}
