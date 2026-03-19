@@ -2,6 +2,13 @@ import type { Rng } from './rng';
 
 export type Difficulty = 'warm-up' | 'main-set' | 'max-out';
 
+// ─── Diagram specs ────────────────────────────────────────────────────────────
+// Each variant carries only the parameters already computed by the problem factory.
+// The SVG renderer is a pure function: DiagramSpec → SVG. No new numbers invented here.
+
+export type DiagramSpec =
+  | { type: 'circle'; radius: number; showRadius: boolean };
+
 export type TopicId =
   | 'foundations'
   | 'shape-form'
@@ -19,6 +26,7 @@ export interface Problem {
   topic: TopicId;
   difficulty: Difficulty;
   standard?: string;
+  diagram?: DiagramSpec;
 }
 
 export interface RawQuestion {
@@ -29,6 +37,7 @@ export interface RawQuestion {
   explanation: string;
   difficulty: Difficulty;
   standard?: string;
+  diagram?: DiagramSpec;
 }
 
 export type QuestionFactory = (rng: Rng) => RawQuestion;

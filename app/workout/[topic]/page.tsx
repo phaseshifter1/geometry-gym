@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { generateWorkout } from '@/lib/problems/generator';
 import { SLUG_TO_TOPIC, TOPIC_META } from '@/lib/problems/types';
+import { DiagramRenderer } from '@/components/DiagramRenderer';
 import type { Problem, TopicId } from '@/lib/problems/types';
 import { saveSession, loadSession, clearActiveSession } from '@/lib/workout-session';
 import { useUser, saveWorkoutToDb } from '@/lib/auth';
@@ -491,6 +492,13 @@ function WorkoutPageInner() {
             <h2 className="mt-4 text-xl font-bold leading-snug text-dark sm:text-2xl">
               {problem.question}
             </h2>
+
+            {/* Diagram (optional) */}
+            {problem.diagram && (
+              <div className="mt-4 flex justify-center">
+                <DiagramRenderer spec={problem.diagram} />
+              </div>
+            )}
 
             {/* Choices */}
             <div className="mt-6 space-y-3">

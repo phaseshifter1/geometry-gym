@@ -293,6 +293,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `C = 2πr ≈ 2 × 3.14 × ${r} = ${c} cm. (πr² = ${(3.14 * r * r).toFixed(2)} cm² is the area.)`,
       difficulty: 'main-set',
       standard: '7.G.B.4',
+      diagram: { type: 'circle', radius: r, showRadius: true },
     };
   },
 
@@ -312,6 +313,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `A = πr² ≈ 3.14 × ${r}² = 3.14 × ${r * r} = ${area} cm².`,
       difficulty: 'main-set',
       standard: '7.G.B.4',
+      diagram: { type: 'circle', radius: r, showRadius: true },
     };
   },
 ];
