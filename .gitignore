@@ -43,6 +43,11 @@ next-env.d.ts
 # internal docs (not for public repo)
 /docs
 
+# internal tooling — not for public repo
+/scripts/
+/tests/similarity.test.ts
+vitest.config.ts
+
 # Playwright
 node_modules/
 /test-results/

@@ -148,7 +148,7 @@ const transformationsQuestions: QuestionFactory[] = [
       'Stretching a shape to make it bigger',
     ],
     explanation:
-      'A translation slides every point of a shape the same distance in the same direction. The shape\'s size and orientation stay the same.',
+      "A translation slides every point of a shape the same distance in the same direction. The shape's size and orientation stay the same.",
     difficulty: 'warm-up',
     standard: '8.G.A.1',
   }),
@@ -178,7 +178,7 @@ const transformationsQuestions: QuestionFactory[] = [
       'Scaling a shape up or down',
     ],
     explanation:
-      'A rotation turns every point of a shape around a center point (the pivot) by the same angle. The shape\'s size stays the same.',
+      "A rotation turns every point of a shape around a center point (the pivot) by the same angle. The shape's size stays the same.",
     difficulty: 'warm-up',
     standard: '8.G.A.1',
   }),
@@ -234,6 +234,11 @@ const transformationsQuestions: QuestionFactory[] = [
 
 // ─── Parameterized questions ───────────────────────────────────────────────────
 
+// Small Pythagorean triples for the distance-on-grid factory
+const SMALL_TRIPLES: [number, number, number][] = [
+  [3, 4, 5], [6, 8, 10], [5, 12, 13],
+];
+
 const parameterizedQuestions: QuestionFactory[] = [
   // Identify quadrant
   (rng: Rng) => {
@@ -258,17 +263,22 @@ const parameterizedQuestions: QuestionFactory[] = [
 
   // Translation calculation
   (rng: Rng) => {
-    const x = rng.intBetween(-5, 5);
-    const y = rng.intBetween(-5, 5);
-    const dx = rng.intBetween(-4, 4);
-    const dy = rng.intBetween(-4, 4);
+    const x = rng.intBetween(-6, 6);
+    const y = rng.intBetween(-6, 6);
+    const dx = rng.intBetween(-5, 5);
+    const dy = rng.intBetween(-5, 5);
     const nx = x + dx;
     const ny = y + dy;
-    const dir = (d: number) => d >= 0 ? `${d} right` : `${Math.abs(d)} left`;
+    const dirX = (d: number) => d >= 0 ? `${d} right` : `${Math.abs(d)} left`;
     const dirY = (d: number) => d >= 0 ? `${d} up` : `${Math.abs(d)} down`;
+    const stem = rng.pick([
+      `Point (${x}, ${y}) is translated ${dirX(dx)} and ${dirY(dy)}. What are the new coordinates?`,
+      `A point at (${x}, ${y}) moves ${dirX(dx)} and ${dirY(dy)}. Where does it end up?`,
+      `Translate (${x}, ${y}) by (${dx}, ${dy}). What are the new coordinates?`,
+    ]);
     return {
       id: 'translation-calc',
-      question: `Point (${x}, ${y}) is translated ${dir(dx)} and ${dirY(dy)}. What are the new coordinates?`,
+      question: stem,
       correctAnswer: `(${nx}, ${ny})`,
       distractors: dedup(`(${nx}, ${ny})`, [
         `(${nx + 1}, ${ny})`,
@@ -284,9 +294,9 @@ const parameterizedQuestions: QuestionFactory[] = [
   // Distance between points on same row/column
   (rng: Rng) => {
     const axis = rng.pick(['x', 'y'] as const);
-    const fixed = rng.intBetween(-4, 4);
-    const a = rng.intBetween(-6, 2);
-    const b = rng.intBetween(a + 2, a + 8);
+    const fixed = rng.intBetween(-5, 5);
+    const a = rng.intBetween(-7, 2);
+    const b = rng.intBetween(a + 2, a + 10);
     const dist = b - a;
     const p1 = axis === 'x' ? `(${a}, ${fixed})` : `(${fixed}, ${a})`;
     const p2 = axis === 'x' ? `(${b}, ${fixed})` : `(${fixed}, ${b})`;
@@ -297,11 +307,198 @@ const parameterizedQuestions: QuestionFactory[] = [
       distractors: dedup(`${dist} units`, [
         `${dist + 2} units`,
         `${Math.abs(a + b)} units`,
-        `${dist - 1} units`,
+        `${dist - 1 < 0 ? dist + 3 : dist - 1} units`,
       ]),
       explanation: `The points share the same ${axis === 'x' ? 'y' : 'x'}-value, so distance = |${b} − (${a})| = ${dist} units.`,
       difficulty: 'main-set',
       standard: '6.NS.C.6',
+    };
+  },
+
+  // Reflection over x-axis (parameterized)
+  (rng: Rng) => {
+    const x = rng.intBetween(-7, 7);
+    const ySign = rng.pick([-1, 1]);
+    const y = ySign * rng.intBetween(1, 7); // nonzero y
+    const ny = -y;
+    const stem = rng.pick([
+      `Point (${x}, ${y}) is reflected over the x-axis. What are the new coordinates?`,
+      `Reflect (${x}, ${y}) over the x-axis. Where is the image point?`,
+      `What is the image of (${x}, ${y}) after a reflection over the x-axis?`,
+    ]);
+    return {
+      id: 'reflection-x-calc',
+      question: stem,
+      correctAnswer: `(${x}, ${ny})`,
+      distractors: dedup(`(${x}, ${ny})`, [
+        `(${-x}, ${y})`,
+        `(${-x}, ${ny})`,
+        `(${x}, ${y})`,
+      ]),
+      explanation: `Reflecting over the x-axis: (x, y) → (x, −y). So (${x}, ${y}) → (${x}, ${ny}).`,
+      difficulty: 'main-set',
+      standard: '8.G.A.3',
+    };
+  },
+
+  // Reflection over y-axis (parameterized)
+  (rng: Rng) => {
+    const xSign = rng.pick([-1, 1]);
+    const x = xSign * rng.intBetween(1, 7); // nonzero x
+    const y = rng.intBetween(-7, 7);
+    const nx = -x;
+    const stem = rng.pick([
+      `Point (${x}, ${y}) is reflected over the y-axis. What are the new coordinates?`,
+      `Reflect (${x}, ${y}) over the y-axis. Where is the image point?`,
+      `What is the image of (${x}, ${y}) after a reflection over the y-axis?`,
+    ]);
+    return {
+      id: 'reflection-y-calc',
+      question: stem,
+      correctAnswer: `(${nx}, ${y})`,
+      distractors: dedup(`(${nx}, ${y})`, [
+        `(${x}, ${-y})`,
+        `(${nx}, ${-y})`,
+        `(${x}, ${y})`,
+      ]),
+      explanation: `Reflecting over the y-axis: (x, y) → (−x, y). So (${x}, ${y}) → (${nx}, ${y}).`,
+      difficulty: 'main-set',
+      standard: '8.G.A.3',
+    };
+  },
+
+  // Rotation 180° about the origin
+  (rng: Rng) => {
+    const xSign = rng.pick([-1, 1]);
+    const ySign = rng.pick([-1, 1]);
+    const x = xSign * rng.intBetween(1, 7);
+    const y = ySign * rng.intBetween(1, 7);
+    return {
+      id: 'rotation-180-calc',
+      question: `Point (${x}, ${y}) is rotated 180° about the origin. What are the new coordinates?`,
+      correctAnswer: `(${-x}, ${-y})`,
+      distractors: dedup(`(${-x}, ${-y})`, [
+        `(${y}, ${-x})`,
+        `(${-y}, ${x})`,
+        `(${x}, ${-y})`,
+      ]),
+      explanation: `A 180° rotation maps (x, y) → (−x, −y). So (${x}, ${y}) → (${-x}, ${-y}).`,
+      difficulty: 'main-set',
+      standard: '8.G.A.3',
+    };
+  },
+
+  // Rotation 90° clockwise about the origin
+  (rng: Rng) => {
+    const xSign = rng.pick([-1, 1]);
+    const ySign = rng.pick([-1, 1]);
+    const x = xSign * rng.intBetween(1, 6);
+    const y = ySign * rng.intBetween(1, 6);
+    const nx = y;   // 90° CW: (x, y) → (y, −x)
+    const ny = -x;
+    return {
+      id: 'rotation-90cw-calc',
+      question: `Point (${x}, ${y}) is rotated 90° clockwise about the origin. What are the new coordinates?`,
+      correctAnswer: `(${nx}, ${ny})`,
+      distractors: dedup(`(${nx}, ${ny})`, [
+        `(${-y}, ${x})`,
+        `(${-x}, ${-y})`,
+        `(${-nx}, ${-ny})`,
+      ]),
+      explanation: `A 90° clockwise rotation maps (x, y) → (y, −x). So (${x}, ${y}) → (${nx}, ${ny}).`,
+      difficulty: 'max-out',
+      standard: '8.G.A.3',
+    };
+  },
+
+  // Midpoint of two points
+  (rng: Rng) => {
+    const x1 = rng.intBetween(-4, 4) * 2; // even → integer midpoint
+    const x2 = rng.intBetween(-4, 4) * 2;
+    const y1 = rng.intBetween(-4, 4) * 2;
+    const y2 = rng.intBetween(-4, 4) * 2;
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    return {
+      id: 'midpoint-calc',
+      question: `What is the midpoint of the segment joining (${x1}, ${y1}) and (${x2}, ${y2})?`,
+      correctAnswer: `(${mx}, ${my})`,
+      distractors: dedup(`(${mx}, ${my})`, [
+        `(${x1 + x2}, ${y1 + y2})`,
+        `(${mx + 1}, ${my})`,
+        `(${mx}, ${my + 1})`,
+      ]),
+      explanation: `Midpoint = ((${x1}+${x2})/2, (${y1}+${y2})/2) = (${x1 + x2}/2, ${y1 + y2}/2) = (${mx}, ${my}).`,
+      difficulty: 'main-set',
+      standard: '6.NS.C.6',
+    };
+  },
+
+  // Identify which axis a point lies on
+  (rng: Rng) => {
+    const onYAxis = rng.pick([true, false]);
+    const val = rng.pick([-8, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
+    const pt = onYAxis ? `(0, ${val})` : `(${val}, 0)`;
+    const correct = onYAxis ? 'On the y-axis' : 'On the x-axis';
+    const dist = Math.abs(val);
+    const dir = onYAxis ? (val > 0 ? 'above' : 'below') : (val > 0 ? 'right of' : 'left of');
+    return {
+      id: 'point-on-axis-calc',
+      question: `The point ${pt} lies ___?`,
+      correctAnswer: `${correct}, ${dist} units ${dir} the origin`,
+      distractors: dedup(`${correct}, ${dist} units ${dir} the origin`, [
+        onYAxis ? `On the x-axis, ${dist} units right of the origin` : `On the y-axis, ${dist} units above the origin`,
+        'At the origin (0, 0)',
+        `In Quadrant ${onYAxis && val > 0 ? 'I' : onYAxis && val < 0 ? 'III' : val > 0 ? 'IV' : 'II'}`,
+      ]),
+      explanation: `When one coordinate is 0, the point is on an axis. x = 0 → y-axis; y = 0 → x-axis. The point ${pt} is on the ${onYAxis ? 'y' : 'x'}-axis.`,
+      difficulty: 'main-set',
+      standard: '5.G.A.1',
+    };
+  },
+
+  // Distance between two points using Pythagorean triple
+  (rng: Rng) => {
+    const [a, b, c] = rng.pick(SMALL_TRIPLES);
+    const x1 = rng.intBetween(-3, 3);
+    const y1 = rng.intBetween(-3, 3);
+    const sx = rng.pick([-1, 1]);
+    const sy = rng.pick([-1, 1]);
+    const x2 = x1 + sx * a;
+    const y2 = y1 + sy * b;
+    return {
+      id: 'distance-pythagorean',
+      question: `What is the distance between points (${x1}, ${y1}) and (${x2}, ${y2})?`,
+      correctAnswer: `${c} units`,
+      distractors: dedup(`${c} units`, [
+        `${a + b} units`,
+        `${c + 2} units`,
+        `${Math.round(Math.sqrt(a * a + b * b + 4))} units`,
+      ]),
+      explanation: `Horizontal distance = |${x2} − ${x1}| = ${a}. Vertical distance = |${y2} − ${y1}| = ${b}. Distance = √(${a}² + ${b}²) = √${a * a + b * b} = ${c} units.`,
+      difficulty: 'max-out',
+      standard: '8.G.B.8',
+    };
+  },
+
+  // Reflection over the line y = x
+  (rng: Rng) => {
+    const xSign = rng.pick([-1, 1]);
+    const ySign = rng.pick([-1, 1]);
+    const x = xSign * rng.intBetween(1, 7);
+    const y = ySign * rng.intBetween(1, 7);
+    return {
+      id: 'reflection-y-equals-x',
+      question: `Point (${x}, ${y}) is reflected over the line y = x. What are the new coordinates?`,
+      correctAnswer: `(${y}, ${x})`,
+      distractors: dedup(`(${y}, ${x})`, [
+        `(${-x}, ${-y})`,
+        `(${-y}, ${x})`,
+        `(${x}, ${-y})`,
+      ]),
+      explanation: `Reflecting over y = x swaps the coordinates: (x, y) → (y, x). So (${x}, ${y}) → (${y}, ${x}).`,
+      difficulty: 'max-out',
+      standard: '8.G.A.3',
     };
   },
 ];

@@ -8,7 +8,6 @@ const muscleGroups = [
     icon: Layers,
     title: "Foundations",
     description: "Points, lines, rays, planes, and angles — the building blocks of all geometry.",
-    reps: "27 reps",
     href: "/workout/foundations",
     available: true,
   },
@@ -16,7 +15,6 @@ const muscleGroups = [
     icon: Triangle,
     title: "Shape & Form",
     description: "Polygons, triangles, symmetry — recognise, classify, and reason about shapes.",
-    reps: "24 reps",
     href: "/workout/shape-form",
     available: true,
   },
@@ -24,7 +22,6 @@ const muscleGroups = [
     icon: Ruler,
     title: "The Measurement Room",
     description: "Area and perimeter — how much space a shape holds and how far it is around the edge.",
-    reps: "19 reps",
     href: "/workout/measurement",
     available: true,
   },
@@ -32,7 +29,6 @@ const muscleGroups = [
     icon: Box,
     title: "Heavy Lifts",
     description: "Volume and surface area — 3D shapes, the space they hold, and the surface that wraps them.",
-    reps: "15 reps",
     href: "/workout/volume",
     available: true,
   },
@@ -40,7 +36,6 @@ const muscleGroups = [
     icon: MapPin,
     title: "The Track",
     description: "Coordinates and transformations — plotting points, sliding, flipping, and rotating shapes.",
-    reps: "18 reps",
     href: "/workout/coordinates",
     available: true,
   },
@@ -48,7 +43,6 @@ const muscleGroups = [
     icon: Zap,
     title: "Power Movement",
     description: "Pythagorean theorem, congruence, and similarity — the heavy-hitting theorems of geometry.",
-    reps: "18 reps",
     href: "/workout/power",
     available: true,
   },
@@ -323,9 +317,6 @@ export default function Home() {
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
                       <Icon className="h-5 w-5 text-primary" />
                     </div>
-                    <span className="text-xs font-medium text-muted">
-                      {group.available ? group.reps : 'Coming soon'}
-                    </span>
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-dark">{group.title}</h3>
