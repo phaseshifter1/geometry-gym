@@ -7,7 +7,45 @@ export type Difficulty = 'warm-up' | 'main-set' | 'max-out';
 // The SVG renderer is a pure function: DiagramSpec → SVG. No new numbers invented here.
 
 export type DiagramSpec =
-  | { type: 'circle'; radius: number; showRadius: boolean };
+  | { type: 'circle'; radius: number; showRadius: boolean; showDiameter?: boolean }
+  | { type: 'triangle'; angles: [number, number, number]; showExterior?: number; unknownIndex?: number; unknownIndices?: number[] }
+  | { type: 'rectangle'; width: number; height: number; labelDimensions: boolean; unknownDimension?: 'width' | 'height'; widthLabel?: string; heightLabel?: string }
+  | { type: 'angle'; degrees: number }
+  | { type: 'linear-pair'; knownAngle: number }
+  | { type: 'crossing-lines'; knownAngle: number }
+  | { type: 'complementary-pair'; knownAngle: number }
+  | { type: 'angles-around-point'; angles: [number, number, number, number]; unknownIndex: number }
+  | { type: 'parallel-lines'; knownAngle: number; highlight: 'alternate-interior' | 'co-interior' }
+  | { type: 'triangle-perimeter'; sides: [number, number, number] }
+  | { type: 'triangle-area'; base: number; height: number }
+  | { type: 'parallelogram'; base: number; height: number }
+  | { type: 'trapezoid'; topBase: number; bottomBase: number; height: number }
+  | { type: 'regular-polygon'; sides: number; angleLabel?: string; showExterior?: boolean }
+  | { type: 'quadrilateral-angles'; angles: [number, number, number, number]; unknownIndex: number }
+  | { type: 'right-triangle'; legs: [number, number]; hypotenuse: number; unknown: 'hypotenuse' | 'leg-a' | 'leg-b' }
+  | { type: 'rectangle-diagonal'; width: number; height: number }
+  | {
+      type: 'coordinate-grid';
+      points: Array<{ x: number; y: number; label?: string; color?: 'blue' | 'purple' | 'orange' }>;
+      segments?: Array<{ x1: number; y1: number; x2: number; y2: number; dashed?: boolean }>;
+      highlightLine?: 'x-axis' | 'y-axis' | 'y=x';
+    }
+  | { type: 'cuboid'; length: number; width: number; height: number; unknownDimension?: 'length' | 'width' | 'height'; lengthLabel?: string; widthLabel?: string; heightLabel?: string }
+  | { type: 'cylinder-3d'; radius: number; height: number; unknownDimension?: 'radius' | 'height'; radiusLabel?: string; heightLabel?: string }
+  | { type: 'l-shape'; outerWidth: number; outerHeight: number; cutWidth: number; cutHeight: number }
+  | { type: 'rect-with-hole'; outerWidth: number; outerHeight: number; innerWidth: number; innerHeight: number }
+  | { type: 'triangular-prism'; triangleBase: number; triangleHeight: number; apexOffset: number; length: number; sides?: [number, number, number] }
+  | {
+      type: 'similar-pair';
+      // Normalised polygon vertices (0–1 range). Renderer scales uniformly to produce two similar shapes.
+      vertices: Array<{ x: number; y: number }>;
+      scaleFactor: number;
+      // Optional labels on the representative side of each shape. Omit for visual-anchor-only questions.
+      smallLabel?: string;
+      largeLabel?: string;
+    }
+  | { type: 'rhombus' }
+  | { type: 'kite' };
 
 export type TopicId =
   | 'foundations'

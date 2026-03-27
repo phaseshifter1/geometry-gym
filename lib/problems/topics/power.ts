@@ -15,6 +15,14 @@ function dedup(
   }) as [string, string, string];
 }
 
+// Normalised polygon vertex helpers for similar-pair diagrams
+const rectVerts = (w: number, h: number) => {
+  const s = Math.max(w, h);
+  return [{ x: 0, y: 0 }, { x: w / s, y: 0 }, { x: w / s, y: h / s }, { x: 0, y: h / s }];
+};
+// Isosceles triangle (apex centred)
+const triVerts = () => [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 0.5, y: 0.85 }];
+
 // ─── Pythagorean Theorem ──────────────────────────────────────────────────────
 
 const pythagoreanQuestions: QuestionFactory[] = [
@@ -57,6 +65,7 @@ const pythagoreanQuestions: QuestionFactory[] = [
       'a² + b² = c² → 3² + 4² = 9 + 16 = 25 → c = √25 = 5. The 3-4-5 triangle is the most famous Pythagorean triple.',
     difficulty: 'warm-up',
     standard: '8.G.B.7',
+    diagram: { type: 'right-triangle' as const, legs: [3, 4] as [number, number], hypotenuse: 5, unknown: 'hypotenuse' as const },
   }),
 
   () => ({
@@ -68,6 +77,7 @@ const pythagoreanQuestions: QuestionFactory[] = [
       '5² + 12² = 25 + 144 = 169 = 13². The hypotenuse is 13. This is the 5-12-13 Pythagorean triple.',
     difficulty: 'main-set',
     standard: '8.G.B.7',
+    diagram: { type: 'right-triangle' as const, legs: [5, 12] as [number, number], hypotenuse: 13, unknown: 'hypotenuse' as const },
   }),
 
   () => ({
@@ -83,6 +93,7 @@ const pythagoreanQuestions: QuestionFactory[] = [
       '6² + 8² = 36 + 64 = 100 = 10². The converse of the Pythagorean theorem says: if a² + b² = c², then it IS a right triangle.',
     difficulty: 'main-set',
     standard: '8.G.B.7',
+    diagram: { type: 'triangle-perimeter' as const, sides: [6, 8, 10] as [number, number, number] },
   }),
 
   () => ({
@@ -94,6 +105,7 @@ const pythagoreanQuestions: QuestionFactory[] = [
       'a² + b² = c² → 5² + b² = 13² → 25 + b² = 169 → b² = 144 → b = 12.',
     difficulty: 'main-set',
     standard: '8.G.B.7',
+    diagram: { type: 'right-triangle' as const, legs: [5, 12] as [number, number], hypotenuse: 13, unknown: 'leg-b' as const },
   }),
 
   () => ({
@@ -105,6 +117,7 @@ const pythagoreanQuestions: QuestionFactory[] = [
       'The ladder is the hypotenuse. 6² + 8² = 36 + 64 = 100. √100 = 10 m.',
     difficulty: 'main-set',
     standard: '8.G.B.7',
+    diagram: { type: 'right-triangle' as const, legs: [6, 8] as [number, number], hypotenuse: 10, unknown: 'hypotenuse' as const },
   }),
 
   () => ({
@@ -116,6 +129,7 @@ const pythagoreanQuestions: QuestionFactory[] = [
       'The diagonal splits the rectangle into a right triangle with legs 3 and 4. Diagonal = √(3² + 4²) = √25 = 5 cm.',
     difficulty: 'main-set',
     standard: '8.G.B.8',
+    diagram: { type: 'rectangle-diagonal' as const, width: 3, height: 4 },
   }),
 ];
 
@@ -269,6 +283,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `c = √(${a}² + ${b}²) = √(${a * a} + ${b * b}) = √${a * a + b * b} = ${c}.`,
       difficulty: 'main-set',
       standard: '8.G.B.7',
+      diagram: { type: 'right-triangle' as const, legs: [a, b] as [number, number], hypotenuse: c, unknown: 'hypotenuse' as const },
     };
   },
 
@@ -292,6 +307,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `b = √(${c}² − ${a}²) = √(${c * c} − ${a * a}) = √${c * c - a * a} = ${b}.`,
       difficulty: 'main-set',
       standard: '8.G.B.7',
+      diagram: { type: 'right-triangle' as const, legs: [a, b] as [number, number], hypotenuse: c, unknown: 'leg-b' as const },
     };
   },
 
@@ -300,14 +316,14 @@ const parameterizedQuestions: QuestionFactory[] = [
     const sf = rng.intBetween(2, 8);
     const sideA = rng.intBetween(2, 10);
     const sideB = sideA * sf;
-    const stem = rng.pick([
-      `Two similar rectangles have corresponding sides of ${sideA} cm and ${sideB} cm. What is the scale factor from the smaller to the larger?`,
-      `Two similar triangles have a pair of corresponding sides measuring ${sideA} m and ${sideB} m. What is the scale factor (small to large)?`,
-      `Shape A has a side of ${sideA} cm. The corresponding side in similar Shape B is ${sideB} cm. What is the scale factor from A to B?`,
+    const choice = rng.pick([
+      { stem: `Two similar rectangles have corresponding sides of ${sideA} cm and ${sideB} cm. What is the scale factor from the smaller to the larger?`, vertices: rectVerts(3, 2) },
+      { stem: `Two similar triangles have a pair of corresponding sides measuring ${sideA} m and ${sideB} m. What is the scale factor (small to large)?`, vertices: triVerts() },
+      { stem: `Shape A has a side of ${sideA} cm. The corresponding side in similar Shape B is ${sideB} cm. What is the scale factor from A to B?`, vertices: rectVerts(3, 2) },
     ]);
     return {
       id: 'scale-factor-calc',
-      question: stem,
+      question: choice.stem,
       correctAnswer: `${sf}`,
       distractors: dedup(`${sf}`, [
         `${sideB - sideA}`,
@@ -317,6 +333,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Scale factor = larger ÷ smaller = ${sideB} ÷ ${sideA} = ${sf}.`,
       difficulty: 'main-set',
       standard: '8.G.A.4',
+      diagram: {
+        type: 'similar-pair' as const,
+        vertices: choice.vertices,
+        scaleFactor: sf,
+      },
     };
   },
 
@@ -343,6 +364,13 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Scale factor = ${b} ÷ ${a} = ${sf}. Corresponding side = ${x} × ${sf} = ${y} cm.`,
       difficulty: 'main-set',
       standard: '8.G.A.4',
+      diagram: {
+        type: 'similar-pair' as const,
+        vertices: triVerts(), // both stems mention triangles
+        scaleFactor: sf,
+        smallLabel: `${x} cm`,
+        largeLabel: '?',
+      },
     };
   },
 
@@ -371,6 +399,7 @@ const parameterizedQuestions: QuestionFactory[] = [
         : `${a}² + ${b}² = ${a * a} + ${b * b} = ${sumSq}, but ${c}² = ${cSq}. Since ${sumSq} ≠ ${cSq}, this is NOT a right triangle.`,
       difficulty: 'main-set',
       standard: '8.G.B.7',
+      diagram: { type: 'triangle-perimeter' as const, sides: [a, b, c] as [number, number, number] },
     };
   },
 
@@ -394,6 +423,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Diagonal = √(width² + height²) = √(${a}² + ${b}²) = √(${a * a} + ${b * b}) = √${a * a + b * b} = ${c} cm.`,
       difficulty: 'main-set',
       standard: '8.G.B.8',
+      diagram: { type: 'rectangle-diagonal' as const, width: a, height: b },
     };
   },
 
@@ -405,16 +435,19 @@ const parameterizedQuestions: QuestionFactory[] = [
         q: `A ladder ${c} m long leans against a wall. Its base is ${a} m from the wall. How high up the wall does it reach?`,
         ans: `${b} m`,
         exp: `Height = √(ladder² − base²) = √(${c}² − ${a}²) = √${c * c - a * a} = ${b} m.`,
+        unk: 'leg-b' as const,
       },
       {
         q: `A path goes ${a} km east and then ${b} km north. What is the straight-line distance back to the start?`,
         ans: `${c} km`,
         exp: `Distance = √(${a}² + ${b}²) = √(${a * a} + ${b * b}) = √${a * a + b * b} = ${c} km.`,
+        unk: 'hypotenuse' as const,
       },
       {
         q: `A TV screen is ${a} cm wide and ${b} cm tall. What is its diagonal measurement (the advertised size)?`,
         ans: `${c} cm`,
         exp: `Diagonal = √(${a}² + ${b}²) = √${a * a + b * b} = ${c} cm.`,
+        unk: 'hypotenuse' as const,
       },
     ]);
     const correct = scenario.ans;
@@ -430,6 +463,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: scenario.exp,
       difficulty: 'main-set',
       standard: '8.G.B.7',
+      diagram: { type: 'right-triangle' as const, legs: [a, b] as [number, number], hypotenuse: c, unknown: scenario.unk },
     };
   },
 
@@ -438,13 +472,13 @@ const parameterizedQuestions: QuestionFactory[] = [
     const sf = rng.intBetween(2, 5);
     const p1 = rng.intBetween(6, 20);
     const p2 = p1 * sf;
-    const stem = rng.pick([
-      `Two similar triangles have a scale factor of ${sf} (larger to smaller reversed — small:large = 1:${sf}). The smaller triangle has perimeter ${p1} cm. What is the larger triangle's perimeter?`,
-      `Two similar shapes have scale factor 1:${sf}. The smaller perimeter is ${p1} cm. Find the larger perimeter.`,
+    const choice = rng.pick([
+      { stem: `Two similar triangles have a scale factor of 1:${sf} (small:large). The smaller triangle has perimeter ${p1} cm. What is the larger triangle's perimeter?`, vertices: triVerts() },
+      { stem: `Two similar shapes have scale factor 1:${sf}. The smaller perimeter is ${p1} cm. Find the larger perimeter.`, vertices: rectVerts(3, 2) },
     ]);
     return {
       id: 'similar-perimeter',
-      question: stem,
+      question: choice.stem,
       correctAnswer: `${p2} cm`,
       distractors: dedup(`${p2} cm`, [
         `${p1 + sf} cm`,
@@ -454,6 +488,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Perimeters scale by the same factor as sides. Larger perimeter = ${p1} × ${sf} = ${p2} cm.`,
       difficulty: 'main-set',
       standard: '8.G.A.4',
+      diagram: {
+        type: 'similar-pair' as const,
+        vertices: choice.vertices,
+        scaleFactor: sf,
+      },
     };
   },
 
@@ -479,6 +518,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Area scales by the square of the scale factor. New area = ${a1} × ${sf}² = ${a1} × ${sf * sf} = ${a2} cm².`,
       difficulty: 'max-out',
       standard: '8.G.A.4',
+      diagram: {
+        type: 'similar-pair' as const,
+        vertices: rectVerts(3, 2),
+        scaleFactor: sf,
+      },
     };
   },
 
@@ -500,6 +544,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Area ratio = ${a2} ÷ ${a1} = ${sf * sf} = ${sf}². Scale factor = √${sf * sf} = ${sf}.`,
       difficulty: 'max-out',
       standard: '8.G.A.4',
+      diagram: {
+        type: 'similar-pair' as const,
+        vertices: rectVerts(3, 2),
+        scaleFactor: sf,
+      },
     };
   },
 
@@ -522,6 +571,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `c = √(${a}² + ${b}²) = √(${a * a} + ${b * b}) = ${result}.`,
       difficulty: 'max-out',
       standard: '8.G.B.7',
+      diagram: { type: 'right-triangle' as const, legs: [a, b] as [number, number], hypotenuse: Math.sqrt(sumSq), unknown: 'hypotenuse' as const },
     };
   },
 
@@ -570,6 +620,13 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Smaller side = larger side ÷ scale factor = ${sideLarge} ÷ ${sf} = ${sideSmall} cm.`,
       difficulty: 'main-set',
       standard: '8.G.A.4',
+      diagram: {
+        type: 'similar-pair' as const,
+        vertices: rectVerts(3, 2),
+        scaleFactor: sf,
+        smallLabel: '?',
+        largeLabel: `${sideLarge} cm`,
+      },
     };
   },
 ];

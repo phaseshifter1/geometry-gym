@@ -76,6 +76,7 @@ const staticQuestions: QuestionFactory[] = [
       'Volume = base area × height = (l × w) × h = lwh. Think of stacking layers of unit cubes.',
     difficulty: 'warm-up',
     standard: '5.MD.C.5',
+    diagram: { type: 'cuboid' as const, length: 5, width: 3, height: 4, lengthLabel: 'l', widthLabel: 'w', heightLabel: 'h' },
   }),
 
   () => ({
@@ -106,6 +107,7 @@ const staticQuestions: QuestionFactory[] = [
       'The base of a cylinder is a circle with area πr². Multiply by height h: V = πr²h.',
     difficulty: 'main-set',
     standard: '7.G.B.6',
+    diagram: { type: 'cylinder-3d' as const, radius: 3, height: 5, radiusLabel: 'r', heightLabel: 'h' },
   }),
 
   () => ({
@@ -166,6 +168,7 @@ const staticQuestions: QuestionFactory[] = [
       "A cube: 6 square faces, 12 straight edges (where faces meet), 8 corners (vertices). Euler's formula confirms: F + V − E = 6 + 8 − 12 = 2.",
     difficulty: 'main-set',
     standard: '5.MD.C.3',
+    diagram: { type: 'cuboid' as const, length: 4, width: 4, height: 4 },
   }),
 ];
 
@@ -199,6 +202,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Volume = l × w × h = ${l} × ${w} × ${h} = ${correct} cm³.`,
       difficulty: 'warm-up',
       standard: '5.MD.C.5',
+      diagram: { type: 'cuboid' as const, length: l, width: w, height: h },
     };
   },
 
@@ -225,6 +229,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `SA = 2(lw + lh + wh) = 2(${l * w} + ${l * h} + ${w * h}) = 2 × ${l * w + l * h + w * h} = ${correct} cm².`,
       difficulty: 'main-set',
       standard: '6.G.A.4',
+      diagram: { type: 'cuboid' as const, length: l, width: w, height: h },
     };
   },
 
@@ -250,6 +255,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Volume = s³ = ${s}³ = ${correct} cm³.`,
       difficulty: 'warm-up',
       standard: '5.MD.C.5',
+      diagram: { type: 'cuboid' as const, length: s, width: s, height: s },
     };
   },
 
@@ -274,6 +280,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `SA = 6 × s² = 6 × ${s}² = 6 × ${s * s} = ${correct} cm². A cube has 6 identical square faces.`,
       difficulty: 'main-set',
       standard: '6.G.A.4',
+      diagram: { type: 'cuboid' as const, length: s, width: s, height: s },
     };
   },
 
@@ -300,6 +307,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `V = πr²h ≈ 3.14 × ${r}² × ${h} = 3.14 × ${r * r} × ${h} = ${vol} cm³.`,
       difficulty: 'main-set',
       standard: '7.G.B.6',
+      diagram: { type: 'cylinder-3d' as const, radius: r, height: h },
     };
   },
 
@@ -326,6 +334,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `SA = 2πr² + 2πrh ≈ 2(3.14)(${r})² + 2(3.14)(${r})(${h}) = ${bases} + ${lateral} = ${correct} cm². Two circular bases + lateral surface.`,
       difficulty: 'max-out',
       standard: '7.G.B.6',
+      diagram: { type: 'cylinder-3d' as const, radius: r, height: h },
     };
   },
 
@@ -352,6 +361,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Length = volume ÷ (width × height) = ${vol} ÷ (${w} × ${h}) = ${vol} ÷ ${w * h} = ${l} cm.`,
       difficulty: 'main-set',
       standard: '5.MD.C.5',
+      diagram: { type: 'cuboid' as const, length: l, width: w, height: h, unknownDimension: 'length' as const },
     };
   },
 
@@ -373,6 +383,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Width = volume ÷ (length × height) = ${vol} ÷ (${l} × ${h}) = ${vol} ÷ ${l * h} = ${w} cm.`,
       difficulty: 'main-set',
       standard: '5.MD.C.5',
+      diagram: { type: 'cuboid' as const, length: l, width: w, height: h, unknownDimension: 'width' as const },
     };
   },
 
@@ -394,6 +405,13 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `V = (triangle area) × length = (½ × ${base} × ${triH}) × ${prismL} = ${base * triH / 2} × ${prismL} = ${correct} cm³.`,
       difficulty: 'main-set',
       standard: '6.G.A.2',
+      diagram: {
+        type: 'triangular-prism' as const,
+        triangleBase: base,
+        triangleHeight: triH,
+        apexOffset: base / 2,   // isosceles — no specific shape implied by question stem
+        length: prismL,
+      },
     };
   },
 
@@ -420,6 +438,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Each unit cube takes up 1 cm³, so the number of cubes = volume = ${l} × ${w} × ${h} = ${correct}.`,
       difficulty: 'warm-up',
       standard: '5.MD.C.4',
+      diagram: { type: 'cuboid' as const, length: l, width: w, height: h },
     };
   },
 
@@ -440,6 +459,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `h = V ÷ (πr²) ≈ ${vol} ÷ (3.14 × ${r}²) = ${vol} ÷ ${(3.14 * r * r).toFixed(2)} ≈ ${h} cm.`,
       difficulty: 'max-out',
       standard: '7.G.B.6',
+      diagram: { type: 'cylinder-3d' as const, radius: r, height: h, unknownDimension: 'height' as const },
     };
   },
 
@@ -513,13 +533,15 @@ const parameterizedQuestions: QuestionFactory[] = [
 
   // Wrapping paper (SA real-world context)
   (rng: Rng) => {
-    const l = rng.intBetween(3, 14);
-    const w = rng.intBetween(2, 10);
+    const lRaw = rng.intBetween(3, 14);
+    const wRaw = rng.intBetween(2, 10);
+    const l = Math.max(lRaw, wRaw); // ensure l ≥ w so the front face is the dominant dimension
+    const w = Math.min(lRaw, wRaw);
     const h = rng.intBetween(2, 8);
     const correct = 2 * (l * w + l * h + w * h);
     const stem = rng.pick([
       `A gift box measures ${l} cm × ${w} cm × ${h} cm. How much wrapping paper (in cm²) is needed to cover all its faces?`,
-      `A closed cardboard box is ${l} cm long, ${w} cm wide, and ${h} cm tall. What area of cardboard was used?`,
+      `A closed cardboard box is ${l} cm long, ${w} cm wide, and ${h} cm tall. What is the total surface area of the box?`,
     ]);
     return {
       id: 'sa-rect-context',
@@ -533,6 +555,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `SA = 2(lw + lh + wh) = 2(${l * w} + ${l * h} + ${w * h}) = 2 × ${l * w + l * h + w * h} = ${correct} cm².`,
       difficulty: 'main-set',
       standard: '6.G.A.4',
+      diagram: { type: 'cuboid' as const, length: l, width: w, height: h },
     };
   },
 
@@ -555,6 +578,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `New volume = ${2 * l} × ${w} × ${h} = ${vNew} cm³. Doubling one dimension doubles the volume: ${vOld} × 2 = ${vNew} cm³.`,
       difficulty: 'max-out',
       standard: '5.MD.C.5',
+      diagram: { type: 'cuboid' as const, length: 2 * l, width: w, height: h },
     };
   },
 ];

@@ -61,6 +61,7 @@ const staticQuestions: QuestionFactory[] = [
       'Multiply the two dimensions: A = l × w. The result is in square units.',
     difficulty: 'warm-up',
     standard: '3.MD.C.7',
+    diagram: { type: 'rectangle' as const, width: 5, height: 3, labelDimensions: true, widthLabel: 'l', heightLabel: 'w' },
   }),
 
   () => ({
@@ -76,6 +77,7 @@ const staticQuestions: QuestionFactory[] = [
       'A rectangle has two lengths and two widths. P = l + w + l + w = 2l + 2w.',
     difficulty: 'warm-up',
     standard: '3.MD.D.8',
+    diagram: { type: 'rectangle' as const, width: 5, height: 3, labelDimensions: true, widthLabel: 'l', heightLabel: 'w' },
   }),
 
   () => ({
@@ -212,6 +214,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Area = length × width = ${l} × ${w} = ${correct} cm².`,
       difficulty: 'warm-up',
       standard: '3.MD.C.7',
+      diagram: { type: 'rectangle' as const, width: l, height: w, labelDimensions: true },
     };
   },
 
@@ -238,6 +241,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Perimeter = 2l + 2w = 2(${l}) + 2(${w}) = ${2 * l} + ${2 * w} = ${correct} cm.`,
       difficulty: 'warm-up',
       standard: '3.MD.D.8',
+      diagram: { type: 'rectangle' as const, width: l, height: w, labelDimensions: true },
     };
   },
 
@@ -263,6 +267,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Area = s² = ${s}² = ${correct} m².`,
       difficulty: 'warm-up',
       standard: '3.MD.C.7',
+      diagram: { type: 'rectangle' as const, width: s, height: s, labelDimensions: true },
     };
   },
 
@@ -288,6 +293,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Perimeter = 4 × side = 4 × ${s} = ${correct} cm.`,
       difficulty: 'warm-up',
       standard: '3.MD.D.8',
+      diagram: { type: 'rectangle' as const, width: s, height: s, labelDimensions: true },
     };
   },
 
@@ -316,6 +322,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Perimeter = ${a} + ${b} + ${c} = ${correct} cm.`,
       difficulty: 'warm-up',
       standard: '3.MD.D.8',
+      diagram: { type: 'triangle-perimeter' as const, sides: [c, b, a] as [number, number, number] },
     };
   },
 
@@ -342,6 +349,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Area = ½ × base × height = ½ × ${b} × ${h} = ${correct} cm².`,
       difficulty: 'main-set',
       standard: '6.G.A.1',
+      diagram: { type: 'triangle-area' as const, base: b, height: h },
     };
   },
 
@@ -367,6 +375,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Area = base × perpendicular height = ${b} × ${h} = ${correct} cm². Remember: height must be perpendicular to the base.`,
       difficulty: 'main-set',
       standard: '6.G.A.1',
+      diagram: { type: 'parallelogram' as const, base: b, height: h },
     };
   },
 
@@ -393,6 +402,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Area = ½(a + b) × h = ½(${a} + ${b}) × ${h} = ½ × ${a + b} × ${h} = ${correct} cm².`,
       difficulty: 'main-set',
       standard: '6.G.A.1',
+      diagram: { type: 'trapezoid' as const, topBase: a, bottomBase: b, height: h },
     };
   },
 
@@ -418,6 +428,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Length = area ÷ width = ${area} ÷ ${w} = ${l} cm.`,
       difficulty: 'main-set',
       standard: '3.MD.C.7',
+      diagram: { type: 'rectangle' as const, width: l, height: w, labelDimensions: true, unknownDimension: 'width' as const },
     };
   },
 
@@ -443,6 +454,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `P = 2l + 2w → ${p} = 2l + ${2 * w} → 2l = ${p - 2 * w} → l = ${l} cm.`,
       difficulty: 'main-set',
       standard: '3.MD.D.8',
+      diagram: { type: 'rectangle' as const, width: l, height: w, labelDimensions: true, unknownDimension: 'width' as const },
     };
   },
 
@@ -493,6 +505,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `C = πd ≈ 3.14 × ${d} = ${c} cm. (Diameter = 2 × radius, so C = πd.)`,
       difficulty: 'main-set',
       standard: '7.G.B.4',
+      diagram: { type: 'circle' as const, radius: d / 2, showRadius: false, showDiameter: true },
     };
   },
 
@@ -544,6 +557,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Radius = diameter ÷ 2 = ${d} ÷ 2 = ${r} cm. A = πr² ≈ 3.14 × ${r}² = ${area} cm².`,
       difficulty: 'main-set',
       standard: '7.G.B.4',
+      diagram: { type: 'circle' as const, radius: r, showRadius: false, showDiameter: true },
     };
   },
 
@@ -566,6 +580,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Whole rectangle = ${W} × ${H} = ${W * H} m². Remove corner: ${W * H} − ${w} × ${h} = ${W * H} − ${w * h} = ${correct} m².`,
       difficulty: 'max-out',
       standard: '6.G.A.1',
+      diagram: { type: 'l-shape' as const, outerWidth: W, outerHeight: H, cutWidth: w, cutHeight: h },
     };
   },
 
@@ -588,6 +603,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Shaded = large − small = (${L} × ${W}) − (${l} × ${w}) = ${L * W} − ${l * w} = ${correct} cm².`,
       difficulty: 'max-out',
       standard: '6.G.A.1',
+      diagram: { type: 'rect-with-hole' as const, outerWidth: L, outerHeight: W, innerWidth: l, innerHeight: w },
     };
   },
 ];

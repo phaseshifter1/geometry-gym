@@ -207,6 +207,10 @@ const transformationsQuestions: QuestionFactory[] = [
       'Right means +2 to x: 3 + 2 = 5. Down means −3 to y: 4 − 3 = 1. New point: (5, 1).',
     difficulty: 'main-set',
     standard: '8.G.A.3',
+    diagram: {
+      type: 'coordinate-grid' as const,
+      points: [{ x: 3, y: 4, color: 'blue' as const }],
+    },
   }),
 
   () => ({
@@ -218,6 +222,11 @@ const transformationsQuestions: QuestionFactory[] = [
       'Reflecting over the x-axis flips the y-value: (x, y) → (x, −y). So (4, −3) → (4, 3).',
     difficulty: 'main-set',
     standard: '8.G.A.3',
+    diagram: {
+      type: 'coordinate-grid' as const,
+      points: [{ x: 4, y: -3, color: 'blue' as const }],
+      highlightLine: 'x-axis' as const,
+    },
   }),
 
   () => ({
@@ -229,6 +238,11 @@ const transformationsQuestions: QuestionFactory[] = [
       'Reflecting over the y-axis flips the x-value: (x, y) → (−x, y). So (−2, 5) → (2, 5).',
     difficulty: 'main-set',
     standard: '8.G.A.3',
+    diagram: {
+      type: 'coordinate-grid' as const,
+      points: [{ x: -2, y: 5, color: 'blue' as const }],
+      highlightLine: 'y-axis' as const,
+    },
   }),
 ];
 
@@ -258,6 +272,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `x = ${x} (${x > 0 ? 'positive → right' : 'negative → left'}), y = ${y} (${y > 0 ? 'positive → up' : 'negative → down'}). That puts it in Quadrant ${quadrants[qi]}.`,
       difficulty: 'warm-up',
       standard: '6.NS.C.6',
+      diagram: { type: 'coordinate-grid' as const, points: [{ x, y, label: `(${x},${y})`, color: 'blue' as const }] },
     };
   },
 
@@ -288,6 +303,10 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `New x = ${x} + (${dx}) = ${nx}. New y = ${y} + (${dy}) = ${ny}. Result: (${nx}, ${ny}).`,
       difficulty: 'main-set',
       standard: '8.G.A.3',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [{ x, y, color: 'blue' as const }],
+      },
     };
   },
 
@@ -312,6 +331,17 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `The points share the same ${axis === 'x' ? 'y' : 'x'}-value, so distance = |${b} − (${a})| = ${dist} units.`,
       difficulty: 'main-set',
       standard: '6.NS.C.6',
+      diagram: (() => {
+        const [px1, py1, px2, py2] = axis === 'x' ? [a, fixed, b, fixed] : [fixed, a, fixed, b];
+        return {
+          type: 'coordinate-grid' as const,
+          points: [
+            { x: px1, y: py1, label: `(${px1},${py1})`, color: 'blue' as const },
+            { x: px2, y: py2, label: `(${px2},${py2})`, color: 'blue' as const },
+          ],
+          segments: [{ x1: px1, y1: py1, x2: px2, y2: py2 }],
+        };
+      })(),
     };
   },
 
@@ -338,6 +368,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Reflecting over the x-axis: (x, y) → (x, −y). So (${x}, ${y}) → (${x}, ${ny}).`,
       difficulty: 'main-set',
       standard: '8.G.A.3',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [{ x, y, color: 'blue' as const }],
+        highlightLine: 'x-axis' as const,
+      },
     };
   },
 
@@ -364,6 +399,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Reflecting over the y-axis: (x, y) → (−x, y). So (${x}, ${y}) → (${nx}, ${y}).`,
       difficulty: 'main-set',
       standard: '8.G.A.3',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [{ x, y, color: 'blue' as const }],
+        highlightLine: 'y-axis' as const,
+      },
     };
   },
 
@@ -385,6 +425,10 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `A 180° rotation maps (x, y) → (−x, −y). So (${x}, ${y}) → (${-x}, ${-y}).`,
       difficulty: 'main-set',
       standard: '8.G.A.3',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [{ x, y, color: 'blue' as const }],
+      },
     };
   },
 
@@ -408,6 +452,10 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `A 90° clockwise rotation maps (x, y) → (y, −x). So (${x}, ${y}) → (${nx}, ${ny}).`,
       difficulty: 'max-out',
       standard: '8.G.A.3',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [{ x, y, color: 'blue' as const }],
+      },
     };
   },
 
@@ -431,6 +479,14 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Midpoint = ((${x1}+${x2})/2, (${y1}+${y2})/2) = (${x1 + x2}/2, ${y1 + y2}/2) = (${mx}, ${my}).`,
       difficulty: 'main-set',
       standard: '6.NS.C.6',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [
+          { x: x1, y: y1, label: `(${x1},${y1})`, color: 'blue' as const },
+          { x: x2, y: y2, label: `(${x2},${y2})`, color: 'blue' as const },
+        ],
+        segments: [{ x1, y1, x2, y2 }],
+      },
     };
   },
 
@@ -454,6 +510,10 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `When one coordinate is 0, the point is on an axis. x = 0 → y-axis; y = 0 → x-axis. The point ${pt} is on the ${onYAxis ? 'y' : 'x'}-axis.`,
       difficulty: 'main-set',
       standard: '5.G.A.1',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [{ x: onYAxis ? 0 : val, y: onYAxis ? val : 0, label: `(${onYAxis ? 0 : val},${onYAxis ? val : 0})`, color: 'blue' as const }],
+      },
     };
   },
 
@@ -478,6 +538,18 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Horizontal distance = |${x2} − ${x1}| = ${a}. Vertical distance = |${y2} − ${y1}| = ${b}. Distance = √(${a}² + ${b}²) = √${a * a + b * b} = ${c} units.`,
       difficulty: 'max-out',
       standard: '8.G.B.8',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [
+          { x: x1, y: y1, label: `(${x1},${y1})`, color: 'blue' as const },
+          { x: x2, y: y2, label: `(${x2},${y2})`, color: 'blue' as const },
+        ],
+        segments: [
+          { x1, y1, x2, y2 },
+          { x1, y1, x2, y2: y1, dashed: true },
+          { x1: x2, y1, x2, y2, dashed: true },
+        ],
+      },
     };
   },
 
@@ -499,6 +571,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Reflecting over y = x swaps the coordinates: (x, y) → (y, x). So (${x}, ${y}) → (${y}, ${x}).`,
       difficulty: 'max-out',
       standard: '8.G.A.3',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [{ x, y, color: 'blue' as const }],
+        highlightLine: 'y=x' as const,
+      },
     };
   },
 ];
