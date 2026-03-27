@@ -1,5 +1,5 @@
 import type { Rng } from '../rng';
-import type { QuestionFactory } from '../types';
+import type { QuestionFactory, DiagramSpec } from '../types';
 import { SHAPE_OBJECTS, LOCATIONS } from '../scenarios';
 
 // Shape & Form: Polygons, Triangles, Symmetry
@@ -26,32 +26,43 @@ const POLY_NAMES: Record<number, string> = {
 
 // ─── Symmetry data ────────────────────────────────────────────────────────────
 
-const LINE_SYMMETRY_DATA = [
-  { shape: 'equilateral triangle', lines: 3, hint: 'one from each vertex to the midpoint of the opposite side' },
-  { shape: 'square', lines: 4, hint: 'two through opposite vertices and two through midpoints of opposite sides' },
-  { shape: 'non-square rectangle', lines: 2, hint: 'one horizontal, one vertical — the diagonals are NOT lines of symmetry' },
-  { shape: 'regular pentagon', lines: 5, hint: 'one from each vertex to the midpoint of the opposite side' },
-  { shape: 'regular hexagon', lines: 6, hint: 'three through opposite vertices and three through midpoints of opposite sides' },
-  { shape: 'non-square rhombus', lines: 2, hint: 'the two diagonals are the lines of symmetry' },
-  { shape: 'isosceles (non-equilateral) triangle', lines: 1, hint: 'from the apex vertex to the midpoint of the base only' },
-  { shape: 'scalene triangle', lines: 0, hint: 'no two sides or angles are equal, so no fold produces matching halves' },
-  { shape: 'non-rectangle parallelogram', lines: 0, hint: 'opposite sides are equal but no straight fold maps one half onto the other' },
-  { shape: 'kite', lines: 1, hint: 'the line connecting the two vertex angles (the "spine")' },
-  { shape: 'regular octagon', lines: 8, hint: 'four through opposite vertices and four through midpoints of opposite sides' },
+const LINE_SYMMETRY_DATA: Array<{ shape: string; lines: number; hint: string; diagram: DiagramSpec }> = [
+  { shape: 'equilateral triangle', lines: 3, hint: 'one from each vertex to the midpoint of the opposite side',
+    diagram: { type: 'regular-polygon', sides: 3 } },
+  { shape: 'square', lines: 4, hint: 'two through opposite vertices and two through midpoints of opposite sides',
+    diagram: { type: 'regular-polygon', sides: 4 } },
+  { shape: 'non-square rectangle', lines: 2, hint: 'one horizontal, one vertical — the diagonals are NOT lines of symmetry',
+    diagram: { type: 'rectangle', width: 5, height: 3, labelDimensions: false } },
+  { shape: 'regular pentagon', lines: 5, hint: 'one from each vertex to the midpoint of the opposite side',
+    diagram: { type: 'regular-polygon', sides: 5 } },
+  { shape: 'regular hexagon', lines: 6, hint: 'three through opposite vertices and three through midpoints of opposite sides',
+    diagram: { type: 'regular-polygon', sides: 6 } },
+  { shape: 'non-square rhombus', lines: 2, hint: 'the two diagonals are the lines of symmetry',
+    diagram: { type: 'rhombus' } },
+  { shape: 'isosceles (non-equilateral) triangle', lines: 1, hint: 'from the apex vertex to the midpoint of the base only',
+    diagram: { type: 'triangle', angles: [70, 70, 40] as [number, number, number] } },
+  { shape: 'scalene triangle', lines: 0, hint: 'no two sides or angles are equal, so no fold produces matching halves',
+    diagram: { type: 'triangle', angles: [50, 70, 60] as [number, number, number] } },
+  { shape: 'non-rectangle parallelogram', lines: 0, hint: 'opposite sides are equal but no straight fold maps one half onto the other',
+    diagram: { type: 'parallelogram', base: 5, height: 3 } },
+  { shape: 'kite', lines: 1, hint: 'the line connecting the two vertex angles (the "spine")',
+    diagram: { type: 'kite' } },
+  { shape: 'regular octagon', lines: 8, hint: 'four through opposite vertices and four through midpoints of opposite sides',
+    diagram: { type: 'regular-polygon', sides: 8 } },
 ];
 
-const ROTATIONAL_DATA = [
-  { shape: 'equilateral triangle', order: 3, angle: 120 },
-  { shape: 'square', order: 4, angle: 90 },
-  { shape: 'non-square rectangle', order: 2, angle: 180 },
-  { shape: 'regular pentagon', order: 5, angle: 72 },
-  { shape: 'regular hexagon', order: 6, angle: 60 },
-  { shape: 'non-square rhombus', order: 2, angle: 180 },
-  { shape: 'non-rectangle parallelogram', order: 2, angle: 180 },
-  { shape: 'regular octagon', order: 8, angle: 45 },
-  { shape: 'scalene triangle', order: 1, angle: 360 },
-  { shape: 'kite', order: 1, angle: 360 },
-  { shape: 'regular decagon', order: 10, angle: 36 },
+const ROTATIONAL_DATA: Array<{ shape: string; order: number; angle: number; diagram: DiagramSpec }> = [
+  { shape: 'equilateral triangle', order: 3, angle: 120, diagram: { type: 'regular-polygon', sides: 3 } },
+  { shape: 'square', order: 4, angle: 90, diagram: { type: 'regular-polygon', sides: 4 } },
+  { shape: 'non-square rectangle', order: 2, angle: 180, diagram: { type: 'rectangle', width: 5, height: 3, labelDimensions: false } },
+  { shape: 'regular pentagon', order: 5, angle: 72, diagram: { type: 'regular-polygon', sides: 5 } },
+  { shape: 'regular hexagon', order: 6, angle: 60, diagram: { type: 'regular-polygon', sides: 6 } },
+  { shape: 'non-square rhombus', order: 2, angle: 180, diagram: { type: 'rhombus' } },
+  { shape: 'non-rectangle parallelogram', order: 2, angle: 180, diagram: { type: 'parallelogram', base: 5, height: 3 } },
+  { shape: 'regular octagon', order: 8, angle: 45, diagram: { type: 'regular-polygon', sides: 8 } },
+  { shape: 'scalene triangle', order: 1, angle: 360, diagram: { type: 'triangle', angles: [50, 70, 60] as [number, number, number] } },
+  { shape: 'kite', order: 1, angle: 360, diagram: { type: 'kite' } },
+  { shape: 'regular decagon', order: 10, angle: 36, diagram: { type: 'regular-polygon', sides: 10 } },
 ];
 
 // ─── Polygon factories ────────────────────────────────────────────────────────
@@ -117,6 +128,7 @@ const polygonQuestions: QuestionFactory[] = [
       explanation: `A polygon with ${n} sides is a ${name}. Remembering prefixes helps: penta- (5), hexa- (6), hepta- (7), octa- (8), nona- (9), deca- (10).`,
       difficulty: 'warm-up',
       standard: '3.G.A.1',
+      diagram: { type: 'regular-polygon' as const, sides: n },
     };
   },
 
@@ -138,6 +150,7 @@ const polygonQuestions: QuestionFactory[] = [
       explanation: `A ${name} has ${n} sides. Prefix: ${name.slice(0, 4)}- tells you the count.`,
       difficulty: 'warm-up',
       standard: '3.G.A.1',
+      diagram: { type: 'regular-polygon' as const, sides: n },
     };
   },
 
@@ -242,6 +255,7 @@ const polygonQuestions: QuestionFactory[] = [
       explanation: `Interior angle sum = (n − 2) × 180°. For a ${name} (n = ${n}): (${n} − 2) × 180° = ${n - 2} × 180° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '6.G.A.1',
+      diagram: { type: 'regular-polygon' as const, sides: n },
     };
   },
 
@@ -269,6 +283,7 @@ const polygonQuestions: QuestionFactory[] = [
       explanation: `Each angle = (n − 2) × 180° ÷ n = ${sum} ÷ ${n} = ${correct}°.`,
       difficulty: 'max-out',
       standard: '6.G.A.1',
+      diagram: { type: 'regular-polygon' as const, sides: n, angleLabel: '?°' },
     };
   },
 
@@ -292,6 +307,7 @@ const polygonQuestions: QuestionFactory[] = [
       explanation: `Each exterior angle of a regular polygon = 360° ÷ n. For a ${name}: 360° ÷ ${n} = ${exterior}°. Note: exterior + interior = 180°.`,
       difficulty: 'max-out',
       standard: '6.G.A.1',
+      diagram: { type: 'regular-polygon' as const, sides: n, showExterior: true },
     };
   },
 
@@ -319,6 +335,7 @@ const polygonQuestions: QuestionFactory[] = [
       explanation: `Quadrilateral angles sum to 360°. Fourth angle = 360° − ${a}° − ${b}° − ${c}° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '5.G.B.3',
+      diagram: { type: 'quadrilateral-angles' as const, angles: [a, b, c, correct] as [number, number, number, number], unknownIndex: 3 },
     };
   },
 ];
@@ -427,6 +444,7 @@ const triangleQuestions: QuestionFactory[] = [
       explanation: `Triangle angles sum to 180°. Third angle = 180° − ${a}° − ${b}° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '8.G.A.5',
+      diagram: { type: 'triangle' as const, angles: [a, b, correct] as [number, number, number], unknownIndex: 2 },
     };
   },
 
@@ -466,6 +484,7 @@ const triangleQuestions: QuestionFactory[] = [
           : `All three angles (${a}°, ${b}°, ${c}°) are less than 90° — that makes it an acute triangle.`,
       difficulty: 'main-set',
       standard: '4.G.A.2',
+      diagram: { type: 'triangle' as const, angles: [a, b, c] as [number, number, number] },
     };
   },
 
@@ -511,6 +530,7 @@ const triangleQuestions: QuestionFactory[] = [
           : `All three sides (${sides[0]}, ${sides[1]}, ${sides[2]} cm) are different — scalene triangle.`,
       difficulty: 'main-set',
       standard: '4.G.A.2',
+      diagram: { type: 'triangle-perimeter' as const, sides: sides as [number, number, number] },
     };
   },
 
@@ -538,6 +558,8 @@ const triangleQuestions: QuestionFactory[] = [
       explanation: `Base angles = (180° − ${evenApex}°) ÷ 2 = ${180 - evenApex}° ÷ 2 = ${base}°.`,
       difficulty: 'main-set',
       standard: '4.G.A.2',
+      // angles: [base, base, apex] — apex at top (v2), both base angles unknown
+      diagram: { type: 'triangle' as const, angles: [base, base, evenApex] as [number, number, number], unknownIndices: [0, 1] },
     };
   },
 
@@ -562,6 +584,8 @@ const triangleQuestions: QuestionFactory[] = [
       explanation: `Apex = 180° − 2 × ${base}° = 180° − ${2 * base}° = ${apex}°.`,
       difficulty: 'main-set',
       standard: '4.G.A.2',
+      // angles: [base, base, apex] — apex at top (v2, index 2), base angles known
+      diagram: { type: 'triangle' as const, angles: [base, base, apex] as [number, number, number], unknownIndex: 2 },
     };
   },
 ];
@@ -629,6 +653,7 @@ const symmetryQuestions: QuestionFactory[] = [
       explanation: `A ${shape} has ${lines} line${lines !== 1 ? 's' : ''} of symmetry. ${hint}.`,
       difficulty: 'main-set',
       standard: '4.G.A.3',
+      diagram: entry.diagram,
     };
   },
 
@@ -655,6 +680,7 @@ const symmetryQuestions: QuestionFactory[] = [
           : `A ${shape} looks identical every ${angle}°. That happens ${order} times in a full 360° rotation — so its order is ${order}.`,
       difficulty: 'main-set',
       standard: '4.G.A.3',
+      diagram: entry.diagram,
     };
   },
 ];

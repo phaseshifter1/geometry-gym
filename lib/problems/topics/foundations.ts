@@ -431,6 +431,7 @@ const parameterizedQuestions: QuestionFactory[] = [
         : `${angle}° is between 180° and 360° — that's a reflex angle.`,
       difficulty: 'warm-up',
       standard: '4.G.A.1',
+      diagram: { type: 'angle' as const, degrees: angle },
     };
   },
 
@@ -451,6 +452,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Complementary angles add up to 90°. Missing angle = 90° − ${a}° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '7.G.B.5',
+      diagram: { type: 'complementary-pair' as const, knownAngle: a },
     };
   },
 
@@ -472,6 +474,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Supplementary angles add up to 180°. Missing angle = 180° − ${a}° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '7.G.B.5',
+      diagram: { type: 'linear-pair' as const, knownAngle: a },
     };
   },
 
@@ -491,6 +494,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Vertical angles are always equal. The angle directly across is also ${a}°.`,
       difficulty: 'main-set',
       standard: '7.G.B.5',
+      diagram: { type: 'crossing-lines' as const, knownAngle: a },
     };
   },
 
@@ -510,6 +514,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Angles on a straight line add up to 180°. Other angle = 180° − ${a}° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '7.G.B.5',
+      diagram: { type: 'linear-pair' as const, knownAngle: a },
     };
   },
 
@@ -532,6 +537,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Triangle angles sum to 180°. Third angle = 180° − ${a}° − ${b}° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '8.G.A.5',
+      diagram: { type: 'triangle' as const, angles: [correct, a, b] as [number, number, number], unknownIndex: 0 },
     };
   },
 
@@ -539,19 +545,22 @@ const parameterizedQuestions: QuestionFactory[] = [
   (rng: Rng) => {
     const a = rng.intBetween(20, 80);
     const b = rng.intBetween(20, 160 - a);
+    const c = 180 - a - b;
     const exterior = a + b;
     const questions = [
       `An exterior angle of a triangle equals the sum of the two non-adjacent interior angles. If those angles are ${a}° and ${b}°, what is the exterior angle?`,
-      `A triangle has interior angles of ${a}°, ${b}°, and ${180 - a - b}°. What is the exterior angle at the vertex opposite the ${180 - a - b}° angle?`,
+      `A triangle has interior angles of ${a}°, ${b}°, and ${c}°. What is the exterior angle at the vertex where the interior angle is ${c}°?`,
+      `The angles inside a triangle measure ${a}°, ${b}°, and ${c}°. What is the exterior angle that forms a linear pair with the ${c}° angle?`,
     ];
     return {
       id: 'triangle-exterior-angle',
       question: rng.pick(questions),
       correctAnswer: `${exterior}°`,
-      distractors: dedup(`${exterior}°`, [`${180 - exterior}°`, `${exterior + 10}°`, `${a + b - 10}°`]),
-      explanation: `The exterior angle of a triangle = sum of the two remote interior angles = ${a}° + ${b}° = ${exterior}°.`,
+      distractors: dedup(`${exterior}°`, [`${c}°`, `${180 - a}°`, `${180 - b}°`]),
+      explanation: `The exterior angle of a triangle equals the sum of the two non-adjacent interior angles: ${a}° + ${b}° = ${exterior}°.`,
       difficulty: 'max-out',
       standard: '8.G.A.5',
+      diagram: { type: 'triangle' as const, angles: [a, b, c] as [number, number, number], showExterior: 2 },
     };
   },
 
@@ -569,6 +578,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Angles around a point always sum to 360°. Fourth angle = 360° − ${a}° − ${b}° − ${c}° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '7.G.B.5',
+      diagram: { type: 'angles-around-point' as const, angles: [a, b, c, correct] as [number, number, number, number], unknownIndex: 3 },
     };
   },
 
@@ -587,6 +597,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Alternate interior angles formed by a transversal cutting parallel lines are always equal. Both measure ${a}°.`,
       difficulty: 'max-out',
       standard: '8.G.A.5',
+      diagram: { type: 'parallel-lines' as const, knownAngle: a, highlight: 'alternate-interior' },
     };
   },
 
@@ -602,6 +613,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `Co-interior angles (also called same-side interior or consecutive interior angles) add up to 180°. Other angle = 180° − ${a}° = ${correct}°.`,
       difficulty: 'max-out',
       standard: '8.G.A.5',
+      diagram: { type: 'parallel-lines' as const, knownAngle: a, highlight: 'co-interior' },
     };
   },
 ];
