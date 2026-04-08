@@ -21,6 +21,7 @@ import {
 import { generateWorkout } from '@/lib/problems/generator';
 import { SLUG_TO_TOPIC, TOPIC_META } from '@/lib/problems/types';
 import { DiagramRenderer } from '@/components/DiagramRenderer';
+import { AngleDrawer } from '@/components/AngleDrawer';
 import type { Problem, TopicId } from '@/lib/problems/types';
 import { saveSession, loadSession, clearActiveSession } from '@/lib/workout-session';
 import { useUser, saveWorkoutToDb } from '@/lib/auth';
@@ -362,6 +363,7 @@ function WorkoutPageInner() {
   const [startedAt] = useState(() => new Date().toISOString());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [drawnDegrees, setDrawnDegrees] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
@@ -416,13 +418,23 @@ function WorkoutPageInner() {
   }, []);
 
   const problem = problems[currentIndex];
-  const isCorrect = selectedIndex === problem?.correctIndex;
+  const isAngleDraw = problem?.responseFormat === 'angle-draw';
+  const isCorrect = isAngleDraw
+    ? answered && drawnDegrees !== null && Math.abs(drawnDegrees - Number(problem.correctAnswer)) <= 5
+    : selectedIndex === problem?.correctIndex;
 
   function handleSelect(idx: number) {
     if (answered) return;
     setSelectedIndex(idx);
     setAnswered(true);
     if (idx === problem.correctIndex) setScore((s) => s + 1);
+  }
+
+  function handleAngleDraw(correct: boolean, degrees: number) {
+    if (answered) return;
+    setDrawnDegrees(degrees);
+    setAnswered(true);
+    if (correct) setScore((s) => s + 1);
   }
 
   function handleNext() {
@@ -436,6 +448,7 @@ function WorkoutPageInner() {
     } else {
       setCurrentIndex(nextIndex);
       setSelectedIndex(null);
+      setDrawnDegrees(null);
       setAnswered(false);
       setCoachOpen(false);
       saveSession({ topic: topicId, mode, seed: currentSeed, currentIndex: nextIndex, score, totalQuestions: problems.length, startedAt, completedAt: null });
@@ -448,6 +461,7 @@ function WorkoutPageInner() {
     setChoiceSeed(crypto.randomUUID());
     setCurrentIndex(0);
     setSelectedIndex(null);
+    setDrawnDegrees(null);
     setAnswered(false);
     setScore(0);
     setFinished(false);
@@ -471,11 +485,13 @@ function WorkoutPageInner() {
     'warm-up': 'Warm Up',
     'main-set': 'Main Set',
     'max-out': 'Max Out',
+    'hard': 'Hard',
   };
   const difficultyColor: Record<Problem['difficulty'], string> = {
     'warm-up': 'text-green-600 bg-green-50',
     'main-set': 'text-primary bg-orange-50',
     'max-out': 'text-red-600 bg-red-50',
+    'hard': 'text-red-700 bg-red-50',
   };
 
   return (
@@ -546,42 +562,55 @@ function WorkoutPageInner() {
               </div>
             )}
 
-            {/* Choices */}
-            <div className="mt-6 space-y-3">
-              {problem.choices.map((choice, idx) => {
-                const isSelected = selectedIndex === idx;
-                const isCorrectChoice = idx === problem.correctIndex;
+            {/* Choices / Angle Drawer */}
+            <div className="mt-6">
+              {isAngleDraw ? (
+                <div className="flex justify-center">
+                  <AngleDrawer
+                    targetDegrees={Number(problem.correctAnswer)}
+                    onSubmit={handleAngleDraw}
+                    answered={answered}
+                    correct={answered ? isCorrect : null}
+                  />
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {problem.choices.map((choice, idx) => {
+                    const isSelected = selectedIndex === idx;
+                    const isCorrectChoice = idx === problem.correctIndex;
 
-                let style =
-                  'border-2 border-b-4 border-gray-200 bg-white text-dark hover:border-primary/40 hover:bg-orange-50 active:translate-y-[2px] active:border-b-2 transition-all duration-75';
+                    let style =
+                      'border-2 border-b-4 border-gray-200 bg-white text-dark hover:border-primary/40 hover:bg-orange-50 active:translate-y-[2px] active:border-b-2 transition-all duration-75';
 
-                if (answered) {
-                  if (isCorrectChoice) {
-                    style = 'border-2 border-b-4 border-green-400 bg-green-50 text-green-800';
-                  } else if (isSelected && !isCorrectChoice) {
-                    style = 'border-2 border-b-4 border-red-400 bg-red-50 text-red-800';
-                  } else {
-                    style = 'border-2 border-b-4 border-gray-100 bg-white text-dark opacity-40';
-                  }
-                }
+                    if (answered) {
+                      if (isCorrectChoice) {
+                        style = 'border-2 border-b-4 border-green-400 bg-green-50 text-green-800';
+                      } else if (isSelected && !isCorrectChoice) {
+                        style = 'border-2 border-b-4 border-red-400 bg-red-50 text-red-800';
+                      } else {
+                        style = 'border-2 border-b-4 border-gray-100 bg-white text-dark opacity-40';
+                      }
+                    }
 
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => handleSelect(idx)}
-                    disabled={answered}
-                    className={`flex w-full items-center justify-between gap-3 rounded-xl px-5 py-4 text-left text-sm font-medium transition-all ${style}`}
-                  >
-                    <span>{choice}</span>
-                    {answered && isCorrectChoice && (
-                      <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-500" />
-                    )}
-                    {answered && isSelected && !isCorrectChoice && (
-                      <XCircle className="h-5 w-5 flex-shrink-0 text-red-400" />
-                    )}
-                  </button>
-                );
-              })}
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => handleSelect(idx)}
+                        disabled={answered}
+                        className={`flex w-full items-center justify-between gap-3 rounded-xl px-5 py-4 text-left text-sm font-medium transition-all ${style}`}
+                      >
+                        <span>{choice}</span>
+                        {answered && isCorrectChoice && (
+                          <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-500" />
+                        )}
+                        {answered && isSelected && !isCorrectChoice && (
+                          <XCircle className="h-5 w-5 flex-shrink-0 text-red-400" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
 

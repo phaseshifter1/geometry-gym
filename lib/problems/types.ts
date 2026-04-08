@@ -1,6 +1,6 @@
 import type { Rng } from './rng';
 
-export type Difficulty = 'warm-up' | 'main-set' | 'max-out';
+export type Difficulty = 'warm-up' | 'main-set' | 'max-out' | 'hard';
 
 // ─── Diagram specs ────────────────────────────────────────────────────────────
 // Each variant carries only the parameters already computed by the problem factory.
@@ -58,11 +58,13 @@ export type TopicId =
 export interface Problem {
   id: string;
   question: string;
-  choices: string[];    // 4 choices, shuffled
-  correctIndex: number; // index into choices[] of the right answer
+  choices: string[];    // 4 choices, shuffled — unused for angle-draw
+  correctIndex: number; // index into choices[] — unused for angle-draw
+  correctAnswer: string; // raw answer string — used by angle-draw for target degrees
   explanation: string;
   topic: TopicId;
   difficulty: Difficulty;
+  responseFormat: ResponseFormat;
   standard?: string;
   diagram?: DiagramSpec;
 }
@@ -74,9 +76,14 @@ export interface RawQuestion {
   distractors: [string, string, string];
   explanation: string;
   difficulty: Difficulty;
+  responseFormat?: ResponseFormat; // defaults to 'multiple-choice' if omitted
   standard?: string;
   diagram?: DiagramSpec;
 }
+
+export type ResponseFormat =
+  | 'multiple-choice' // default — all existing items
+  | 'angle-draw';     // student drags a ray to construct an angle
 
 export type QuestionFactory = (rng: Rng) => RawQuestion;
 

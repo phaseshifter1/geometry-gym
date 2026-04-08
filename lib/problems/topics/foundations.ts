@@ -618,10 +618,69 @@ const parameterizedQuestions: QuestionFactory[] = [
   },
 ];
 
+// ─── Angle Draw factories ─────────────────────────────────────────────────────
+// responseFormat: 'angle-draw' — student drags a ray to construct the angle.
+// correctAnswer is the target in degrees (as string). Tolerance: ±5°.
+// distractors field is unused but required by RawQuestion type.
+
+const angleDrawQuestions: QuestionFactory[] = [
+  // Draw a specific acute angle
+  (rng: Rng) => {
+    const deg = rng.pick([30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]);
+    return {
+      id: 'angle-draw-acute',
+      question: `Draw an angle of ${deg}°.`,
+      correctAnswer: String(deg),
+      distractors: ['', '', ''] as [string, string, string],
+      explanation: `An angle of ${deg}° is ${deg < 90 ? 'acute' : 'right'} — it opens less than 90°. You were correct if your angle was within 5° of the target.`,
+      difficulty: 'warm-up',
+      responseFormat: 'angle-draw' as const,
+    };
+  },
+  // Draw a specific obtuse angle
+  (rng: Rng) => {
+    const deg = rng.pick([100, 110, 115, 120, 125, 130, 135, 140, 150]);
+    return {
+      id: 'angle-draw-obtuse',
+      question: `Draw an angle of ${deg}°.`,
+      correctAnswer: String(deg),
+      distractors: ['', '', ''] as [string, string, string],
+      explanation: `An angle of ${deg}° is obtuse — it opens more than 90° but less than 180°. You were correct if your angle was within 5° of the target.`,
+      difficulty: 'main-set',
+      responseFormat: 'angle-draw' as const,
+    };
+  },
+  // Draw a right angle
+  () => ({
+    id: 'angle-draw-right',
+    question: 'Draw a right angle (90°).',
+    correctAnswer: '90',
+    distractors: ['', '', ''] as [string, string, string],
+    explanation: 'A right angle is exactly 90°. It forms a perfect corner — like the corner of a square. You were correct if your angle was within 5° of 90°.',
+    difficulty: 'warm-up',
+    responseFormat: 'angle-draw' as const,
+  }),
+  // Draw supplement
+  (rng: Rng) => {
+    const a = rng.pick([30, 40, 45, 50, 55, 60, 65, 70]);
+    const sup = 180 - a;
+    return {
+      id: 'angle-draw-supplement',
+      question: `Draw the supplement of ${a}°. (Supplementary angles add up to 180°.)`,
+      correctAnswer: String(sup),
+      distractors: ['', '', ''] as [string, string, string],
+      explanation: `The supplement of ${a}° is 180° − ${a}° = ${sup}°. Supplementary angles together form a straight line.`,
+      difficulty: 'main-set',
+      responseFormat: 'angle-draw' as const,
+    };
+  },
+];
+
 // ─── Export ───────────────────────────────────────────────────────────────────
 
 export const foundationsQuestions: QuestionFactory[] = [
   ...pointsLinesQuestions,
   ...anglesQuestions,
   ...parameterizedQuestions,
+  ...angleDrawQuestions,
 ];
