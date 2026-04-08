@@ -12,7 +12,7 @@ function CircleDiagram({ radius, showRadius, showDiameter }: { radius: number; s
     <svg
       viewBox="0 0 280 290"
       width="100%"
-      style={{ maxWidth: '280px' }}
+      style={{ maxWidth: '500px' }}
       aria-label={`Circle with radius ${radius} cm`}
     >
       <circle cx={cx} cy={cy} r={svgR} fill="#F0FDF4" stroke="#16A34A" strokeWidth="2.5" />
@@ -125,7 +125,7 @@ function TriangleDiagram({
     <svg
       viewBox={`0 0 ${VW} ${VH}`}
       width="100%"
-      style={{ maxWidth: '360px' }}
+      style={{ maxWidth: '500px' }}
       aria-label="Triangle with labeled interior angles"
     >
       <polygon
@@ -218,7 +218,7 @@ function RectangleDiagram({
     <svg
       viewBox={`0 0 ${VW} ${VH}`}
       width="100%"
-      style={{ maxWidth: '320px' }}
+      style={{ maxWidth: '500px' }}
       aria-label={`Rectangle ${width} by ${height}`}
     >
       <rect
@@ -311,7 +311,7 @@ function AngleDiagram({ degrees }: { degrees: number }) {
     <svg
       viewBox={`0 0 ${VW} ${VH}`}
       width="100%"
-      style={{ maxWidth: '300px' }}
+      style={{ maxWidth: '500px' }}
       aria-label={`Angle of ${degrees} degrees`}
     >
       {/* Base ray */}
@@ -390,7 +390,7 @@ function TrianglePerimeterDiagram({ sides }: { sides: [number, number, number] }
   ];
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '400px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="Triangle with labeled sides">
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
       {edges.map(({ ax, bx }, i) => {
@@ -430,7 +430,7 @@ function TriangleAreaDiagram({ base, height }: { base: number; height: number })
   const SQUARE = 9;
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '340px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label={`Triangle base ${base} cm height ${height} cm`}>
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
       {/* Dashed height line */}
@@ -473,7 +473,7 @@ function ParallelogramDiagram({ base, height }: { base: number; height: number }
   const SQUARE = 9;
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '360px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label={`Parallelogram base ${base} cm height ${height} cm`}>
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
       {/* Dashed height inside */}
@@ -518,7 +518,7 @@ function TrapezoidDiagram({ topBase, bottomBase, height }: { topBase: number; bo
   const SQUARE = 9;
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '360px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label={`Trapezoid: top ${topBase} cm, bottom ${bottomBase} cm, height ${height} cm`}>
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
       {/* Dashed height line */}
@@ -602,7 +602,7 @@ function LinearPairDiagram({ knownAngle }: { knownAngle: number }) {
     <svg
       viewBox={`0 0 ${VW} ${VH}`}
       width="100%"
-      style={{ maxWidth: '340px' }}
+      style={{ maxWidth: '500px' }}
       aria-label={`Linear pair: ${knownAngle}° and unknown angle on a straight line`}
     >
       {/* Straight base line */}
@@ -706,7 +706,7 @@ function CrossingLinesDiagram({ knownAngle }: { knownAngle: number }) {
     <svg
       viewBox={`0 0 ${VW} ${VH}`}
       width="100%"
-      style={{ maxWidth: '320px' }}
+      style={{ maxWidth: '500px' }}
       aria-label={`Two crossing lines. Known angle ${knownAngle}°, vertical angle unknown`}
     >
       {/* Line 1: horizontal */}
@@ -781,7 +781,7 @@ function ComplementaryPairDiagram({ knownAngle }: { knownAngle: number }) {
   const ly2 = vy - LABEL_R * Math.sin(toRad(knownAngle + unknownAngle / 2));
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '260px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label={`Complementary angles: ${knownAngle}° and unknown in a right angle`}>
       {/* Right angle square */}
       <path d={squarePath} fill="none" stroke="#64748B" strokeWidth="1.8" />
@@ -835,7 +835,7 @@ function AnglesAroundPointDiagram({
   const unknownLabel = '#6B21A8';
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '300px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="Four angles meeting at a point">
       {/* Rays */}
       {starts.map((startDeg, i) => {
@@ -999,7 +999,7 @@ function ParallelLinesDiagram({
   }
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '340px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label={`Parallel lines cut by transversal. ${highlight} angles shown.`}>
       {/* Parallel lines */}
       <line x1={x1} y1={y1} x2={x2} y2={y1} stroke="#64748B" strokeWidth="2.5" strokeLinecap="round" />
@@ -1064,7 +1064,7 @@ function RightTriangleDiagram({ legs, hypotenuse, unknown }: {
   const colH = unknown === 'hypotenuse' ? '#6B21A8' : '#9A3412';
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '320px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="Right triangle with labeled sides">
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
       {/* Right-angle mark */}
@@ -1111,7 +1111,7 @@ function RectangleDiagonalDiagram({ width, height }: { width: number; height: nu
   const normX = -dy / dLen, normY = dx / dLen;
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '320px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label={`Rectangle ${width} × ${height} with diagonal`}>
       <rect x={rx} y={ry} width={dispW} height={dispH} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" />
       {/* Diagonal */}
@@ -1179,7 +1179,7 @@ function RegularPolygonDiagram({ sides, angleLabel, showExterior }: { sides: num
   const extLabel = { x: v0.x + (ARC_R + 18) * extMid.x, y: v0.y + (ARC_R + 18) * extMid.y };
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '280px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label={`Regular ${sides}-sided polygon`}>
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
 
@@ -1227,7 +1227,7 @@ function QuadrilateralAnglesDiagram({ angles, unknownIndex }: { angles: [number,
   const PUSH = 30;
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '320px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="Quadrilateral with labeled angles">
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
       {vx.map((x, i) => {
@@ -1283,7 +1283,7 @@ function CoordinateGridDiagram({
   const labelTicks = ticks.filter(v => v !== 0 && v % labelStep === 0 && Math.abs(v) < range);
 
   return (
-    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" style={{ maxWidth: '260px' }}
+    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="Coordinate grid">
       {/* Grid lines */}
       {ticks.map(v => (
@@ -1386,7 +1386,7 @@ function CuboidDiagram({ length: l, width: w, height: h, unknownDimension, lengt
   const midLeft  = { x: (BFL.x + TFL.x) / 2, y: (BFL.y + TFL.y) / 2 };
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '320px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="3D rectangular prism">
       {/* Hidden rear edges */}
       <line x1={p(BRL).split(',')[0]} y1={p(BRL).split(',')[1]} x2={p(TRL).split(',')[0]} y2={p(TRL).split(',')[1]} stroke="#F97316" strokeWidth="1" strokeDasharray="4 3" />
@@ -1435,7 +1435,7 @@ function Cylinder3DDiagram({ radius: r, height: h, unknownDimension, radiusLabel
   const lblH = unknownDimension === 'height' ? '?' : (heightLabel ?? `${h}`);
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '280px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="3D cylinder">
       {/* Body fill */}
       <rect x={cx - erX} y={topY} width={erX * 2} height={bodyH} fill="#FFF7ED" stroke="none" />
@@ -1516,7 +1516,7 @@ function TriangularPrismDiagram({ triangleBase: B, triangleHeight: H, apexOffset
   };
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: VW }}>
+    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: '500px' }}>
       {/* Bottom rectangular face */}
       <polygon points={`${pt(fBL)} ${pt(fBR)} ${pt(bBR)} ${pt(bBL)}`}
         fill="#d1fae5" stroke="#059669" strokeWidth="1.5" />
@@ -1624,7 +1624,7 @@ function SimilarPairDiagram({ vertices, scaleFactor: sf, smallLabel, largeLabel 
   const largeBot = { x: largeOriginX + largeW / 2, y: largeOriginY + 18 };
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: VW }}>
+    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: '500px' }}>
       {/* Small shape */}
       <polygon points={pts(smallOriginX, smallOriginY, unit)}
         fill="#dbeafe" stroke="#2563eb" strokeWidth="1.8" strokeLinejoin="round" />
@@ -1667,7 +1667,7 @@ function LShapeDiagram({ outerWidth: W, outerHeight: H, cutWidth: cw, cutHeight:
   ].map(([x, y]) => `${X(x)},${Y(y)}`).join(' ');
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: VW }}>
+    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: '500px' }}>
       {/* L-shape fill */}
       <polygon points={pts} fill="#dbeafe" stroke="#2563eb" strokeWidth="2" strokeLinejoin="round" />
 
@@ -1710,7 +1710,7 @@ function RectWithHoleDiagram({ outerWidth: OW, outerHeight: OH, innerWidth: IW, 
   const hy = (OH - IH) / 2;
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: VW }}>
+    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: '500px' }}>
       {/* Outer rect — shaded blue */}
       <rect x={X(0)} y={Y(0)} width={OW * scale} height={OH * scale}
         fill="#dbeafe" stroke="#2563eb" strokeWidth="2" />
@@ -1740,7 +1740,7 @@ function RhombusDiagram() {
   const VW = 220, VH = 180;
   const pts = `110,18 202,90 110,162 18,90`;
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '220px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="Rhombus">
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
     </svg>
@@ -1755,7 +1755,7 @@ function KiteDiagram() {
   const VW = 200, VH = 200;
   const pts = `100,15 165,75 100,185 35,75`;
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '200px' }}
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: '500px' }}
       aria-label="Kite">
       <polygon points={pts} fill="#FFF7ED" stroke="#F97316" strokeWidth="2.5" strokeLinejoin="round" />
     </svg>

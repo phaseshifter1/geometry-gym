@@ -34,9 +34,11 @@ function buildProblem(
     question: raw.question,
     choices: shuffled,
     correctIndex,
+    correctAnswer: raw.correctAnswer,
     explanation: raw.explanation,
     topic,
     difficulty: raw.difficulty,
+    responseFormat: raw.responseFormat ?? 'multiple-choice',
     standard: raw.standard,
     diagram: raw.diagram,
   };
