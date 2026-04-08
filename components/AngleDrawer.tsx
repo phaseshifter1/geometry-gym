@@ -3,11 +3,11 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { RotateCcw } from 'lucide-react';
 
-const SIZE = 280;           // SVG canvas size
+const SIZE = 400;           // SVG canvas size (viewBox units)
 const CX = SIZE / 2;        // vertex x
 const CY = SIZE / 2 + 20;   // vertex y (slightly below centre — gives room for arc label)
-const RAY_LEN = 110;        // length of each ray
-const HANDLE_R = 14;        // draggable handle radius
+const RAY_LEN = 155;        // length of each ray
+const HANDLE_R = 18;        // draggable handle radius
 const TOLERANCE = 5;        // ±degrees for correct
 
 function polarToCart(cx: number, cy: number, r: number, angleDeg: number) {
@@ -122,13 +122,13 @@ export function AngleDrawer({ targetDegrees, onSubmit, answered, correct }: Angl
   const handleColor = answered ? '#9ca3af' : '#F97316';
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex w-full flex-col items-center gap-4">
       {/* SVG canvas */}
       <svg
         ref={svgRef}
         viewBox={`0 0 ${SIZE} ${SIZE}`}
-        width={SIZE}
-        height={SIZE}
+        width="100%"
+        style={{ maxWidth: '500px' }}
         className="touch-none select-none rounded-xl border border-border bg-surface cursor-crosshair"
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
