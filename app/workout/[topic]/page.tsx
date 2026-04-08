@@ -557,7 +557,7 @@ function WorkoutPageInner() {
 
             {/* Diagram (optional) */}
             {problem.diagram && (
-              <div className="mt-6 w-full">
+              <div className="mt-6 mx-auto w-full max-w-[500px]">
                 <DiagramRenderer spec={problem.diagram} />
               </div>
             )}
