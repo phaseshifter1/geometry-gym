@@ -488,7 +488,7 @@ function WorkoutPageInner() {
           className="fixed top-0 left-0 right-0 z-10 border-b border-border bg-white px-6 py-4 transition-transform duration-300"
           style={{ transform: navVisible ? 'translateY(0)' : 'translateY(-100%)' }}
         >
-          <div className="mx-auto flex max-w-2xl items-center justify-between">
+          <div className="mx-auto flex max-w-2xl md:max-w-3xl items-center justify-between">
             <button
               onClick={() => router.push('/')}
               className="flex items-center gap-1.5 text-sm font-medium text-muted hover:text-dark transition-colors"
@@ -508,7 +508,7 @@ function WorkoutPageInner() {
             </span>
           </div>
           {/* Progress bar */}
-          <div className="mx-auto mt-3 max-w-2xl">
+          <div className="mx-auto mt-3 max-w-2xl md:max-w-3xl">
             <div className="h-1.5 w-full rounded-full bg-surface">
               <div
                 className="h-1.5 rounded-full bg-primary transition-all duration-300"
@@ -525,7 +525,7 @@ function WorkoutPageInner() {
 
         {/* Question card */}
         <div className={`flex flex-1 flex-col items-center px-6 py-10 ${answered ? 'pb-56' : ''}`}>
-          <div className="w-full max-w-2xl">
+          <div className="w-full max-w-2xl md:max-w-3xl">
 
             {/* Difficulty badge */}
             <span
@@ -604,7 +604,7 @@ function WorkoutPageInner() {
       {answered && problem && (
         <div
           style={{ animation: 'slideUp 0.25s ease-out' }}
-          className={`fixed bottom-4 left-0 right-0 z-30 w-full max-w-2xl px-8 py-6 rounded-2xl shadow-xl mx-auto ${
+          className={`fixed bottom-4 left-0 right-0 z-30 w-full max-w-2xl md:max-w-3xl px-8 py-6 rounded-2xl shadow-xl mx-auto ${
             isCorrect ? 'bg-green-800' : 'bg-red-700'
           }`}
         >
