@@ -33,10 +33,12 @@ function CoachPanel({
   problem,
   selectedIndex,
   onClose,
+  onUserMessage,
 }: {
   problem: Problem;
   selectedIndex: number | null;
   onClose: () => void;
+  onUserMessage: () => void;
 }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState('');
@@ -71,6 +73,7 @@ function CoachPanel({
     if (!input.trim() || isLoading || atLimit) return;
     sendMessage({ text: input });
     setInput('');
+    onUserMessage();
   }
 
   return (
@@ -371,6 +374,9 @@ function WorkoutPageInner() {
   const [navVisible, setNavVisible] = useState(true);
   const lastScrollY = useRef(0);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const coachEverOpened = useRef(false);
+  const coachMessageCount = useRef(0);
+  const questionStartedAt = useRef(Date.now());
 
   useEffect(() => {
     function showNav() {
@@ -438,6 +444,25 @@ function WorkoutPageInner() {
   }
 
   function handleNext() {
+    fetch('/api/attempt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topicId,
+        itemFamilyId:       problem.id,
+        difficulty:         problem.difficulty,
+        correct:            isCorrect,
+        selectedChoiceIndex: selectedIndex ?? -1,
+        timeMs:             Date.now() - questionStartedAt.current,
+        coachOpened:        coachEverOpened.current,
+        coachMessageCount:  coachMessageCount.current,
+      }),
+    }).catch(() => null);
+
+    coachEverOpened.current = false;
+    coachMessageCount.current = 0;
+    questionStartedAt.current = Date.now();
+
     const nextIndex = currentIndex + 1;
     if (nextIndex >= problems.length) {
       setFinished(true);
@@ -617,7 +642,7 @@ function WorkoutPageInner() {
             {/* Ask Coach button below answers */}
             <div className="mt-6">
               <button
-                onClick={() => setCoachOpen((o) => !o)}
+                onClick={() => { setCoachOpen((o) => !o); coachEverOpened.current = true; }}
                 className="flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-primary"
               >
                 <MessageCircle className="h-4 w-4" />
@@ -671,7 +696,7 @@ function WorkoutPageInner() {
 
       {/* Ask Coach tab — always visible on right edge */}
       <button
-        onClick={() => setCoachOpen((o) => !o)}
+        onClick={() => { setCoachOpen((o) => !o); coachEverOpened.current = true; }}
         className="fixed z-50 flex flex-col items-center gap-2 px-2 py-4 rounded-l-xl shadow-lg text-white font-semibold text-sm"
         style={{ backgroundColor: '#F97316', right: coachOpen ? '320px' : '0', top: '50%', transform: 'translateY(-50%)' }}
       >
@@ -690,6 +715,7 @@ function WorkoutPageInner() {
             problem={problem}
             selectedIndex={selectedIndex}
             onClose={() => setCoachOpen(false)}
+            onUserMessage={() => { coachMessageCount.current++; }}
           />
         </div>
       )}
