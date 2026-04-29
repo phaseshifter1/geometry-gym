@@ -92,3 +92,32 @@ create policy "Anyone can insert insight feedback"
   with check (true);
 
 -- Admins query this table directly via service role — no user select policy needed
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- item_attempts — per-question telemetry (created 2026-04-29)
+-- ─────────────────────────────────────────────────────────────────────────────
+
+create table item_attempts (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid references auth.users null,  -- null = guest
+  session_id            uuid null,
+  topic                 text not null,
+  item_family_id        text not null,
+  difficulty            text not null,
+  correct               boolean not null,
+  selected_choice_index int not null,
+  time_ms               int null,
+  coach_opened          boolean not null default false,
+  coach_message_count   int not null default 0,
+  completed_at          timestamptz not null default now()
+);
+
+alter table item_attempts enable row level security;
+
+create policy "insert own or guest attempts"
+  on item_attempts for insert
+  with check (user_id is null or user_id = auth.uid());
+
+create policy "read own attempts"
+  on item_attempts for select
+  using (user_id = auth.uid());
