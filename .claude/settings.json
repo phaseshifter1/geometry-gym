@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npx playwright:*)",
+      "WebFetch(domain:www.wolfram.com)",
+      "WebFetch(domain:algebrica.org)",
+      "WebSearch"
+    ]
+  }
+}
