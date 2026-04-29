@@ -7,5 +7,18 @@
       "WebFetch(domain:algebrica.org)",
       "WebSearch"
     ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"\n--- HANDOFF REMINDER ---\nBefore closing: update docs/handoff.md with what was done, what is uncommitted, and next steps.\n------------------------\""
+          }
+        ]
+      }
+    ]
   }
 }
