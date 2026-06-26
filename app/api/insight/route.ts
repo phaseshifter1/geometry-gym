@@ -42,11 +42,11 @@ export async function POST(req: Request) {
 
   const { text } = await generateText({
     model: anthropic('claude-haiku-4-5-20251001'),
-    maxOutputTokens: 160,
-    temperature: 1,
+    maxOutputTokens: 90,
+    temperature: 0.8,
     prompt: `A student just completed a geometry workout on the topic: "${topicLabel}".
 ${interestClause}
-Write 2-3 warm, encouraging sentences that connect this topic to real life and why training it matters.
+Write 1-2 warm, encouraging sentences that connect this topic to real life and why training it matters.
 Do not mention their score or performance. Do not say "great job" or use generic praise.
 Keep it honest, grounded, and briefly inspiring.
 Assume a North American audience — for example, "football" means American football (NFL, touchdowns, yard lines), not soccer.

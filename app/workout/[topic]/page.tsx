@@ -166,6 +166,28 @@ function CoachPanel({
 
 // ─── Finished Screen ──────────────────────────────────────────────────────────
 
+function getFallbackInsight(topicLabel: string): string {
+  const topic = topicLabel.toLowerCase();
+
+  if (topic.includes('measurement')) {
+    return 'Coach takeaway: measurement gets stronger when you slow down and track the units. Every length, area, and volume rep is practice reading the real world more precisely.';
+  }
+  if (topic.includes('volume')) {
+    return 'Coach takeaway: volume is space you can reason about, not just a formula to memorize. Picture the layers stacking up, then let the numbers follow.';
+  }
+  if (topic.includes('coordinate')) {
+    return 'Coach takeaway: coordinates turn shapes into moves you can track. Each point is a handle, and each transformation is a clean set of directions.';
+  }
+  if (topic.includes('power')) {
+    return 'Coach takeaway: similarity and right-triangle patterns reward patience. Look for matching structure first, then the calculation usually has a clear path.';
+  }
+  if (topic.includes('shape')) {
+    return 'Coach takeaway: shape work is about noticing what stays true. Angles, sides, and symmetry give you clues before any calculation starts.';
+  }
+
+  return 'Coach takeaway: geometry gets easier when you train your eye first and your calculation second. Spot the structure, then choose the tool that fits.';
+}
+
 function FinishedScreen({
   score,
   total,
@@ -182,7 +204,8 @@ function FinishedScreen({
   onHome: () => void;
 }) {
   const [promptDismissed, setPromptDismissed] = useState(false);
-  const [insight, setInsight] = useState<string | null>(null);
+  const [insight, setInsight] = useState(() => getFallbackInsight(topicLabel));
+  const [personalizedInsightReady, setPersonalizedInsightReady] = useState(false);
   const [feedbackState, setFeedbackState] = useState<'idle' | 'thankyou'>('idle');
 
   useEffect(() => {
@@ -198,7 +221,10 @@ function FinishedScreen({
         signal: controller.signal,
       });
       const data = await res.json();
-      setInsight(data.insight ?? null);
+      if (typeof data.insight === 'string' && data.insight.trim().length > 0) {
+        setInsight(data.insight);
+        setPersonalizedInsightReady(true);
+      }
     }
 
     fetchInsight().catch(() => null);
@@ -253,12 +279,15 @@ function FinishedScreen({
       <p className="mx-auto mt-6 max-w-sm text-base text-muted">{message}</p>
 
       {/* AI insight */}
-      <p className="mx-auto mt-4 max-w-md text-base text-dark italic">
-        {insight ?? '\u00A0'}
-      </p>
+      <div className="mx-auto mt-4 max-w-md">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted">
+          {personalizedInsightReady ? 'Personalized coach tip' : 'Coach tip'}
+        </p>
+        <p className="mt-1 text-base text-dark italic">{insight}</p>
+      </div>
 
       {/* Insight feedback */}
-      {insight && (
+      {personalizedInsightReady && (
         <div className="mt-3 flex items-center justify-center gap-3 h-8">
           {feedbackState === 'idle' ? (
             <>
@@ -358,7 +387,6 @@ function WorkoutPageInner() {
 
   const problems: Problem[] = useMemo(() => {
     return generateWorkout(topicId, currentSeed, choiceSeed);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topicId, currentSeed, choiceSeed]);
 
   const user = useUser();
