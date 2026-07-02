@@ -475,7 +475,11 @@ const triangleQuestions: QuestionFactory[] = [
       id: 'triangle-type-by-angles',
       question: `A triangle has angles of ${a}°, ${b}°, and ${c}°. What type of triangle is it?`,
       correctAnswer: correctLabel,
-      distractors: dedup(correctLabel, ['Right triangle', 'Obtuse triangle', 'Acute triangle'].filter(l => l !== correctLabel) as [string, string, string]),
+      distractors: dedup(
+        correctLabel,
+        ['Right triangle', 'Obtuse triangle', 'Acute triangle', 'Not enough information']
+          .filter(l => l !== correctLabel) as [string, string, string],
+      ),
       explanation:
         type === 'right'
           ? `One angle is exactly 90° — that makes it a right triangle.`
@@ -519,7 +523,7 @@ const triangleQuestions: QuestionFactory[] = [
       correctAnswer: `${type.charAt(0).toUpperCase() + type.slice(1)} triangle`,
       distractors: dedup(
         `${type.charAt(0).toUpperCase() + type.slice(1)} triangle`,
-        ['Equilateral triangle', 'Isosceles triangle', 'Scalene triangle']
+        ['Equilateral triangle', 'Isosceles triangle', 'Scalene triangle', 'Not enough information']
           .filter(l => l.toLowerCase() !== `${type} triangle`) as [string, string, string],
       ),
       explanation:

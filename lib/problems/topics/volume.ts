@@ -318,6 +318,9 @@ const parameterizedQuestions: QuestionFactory[] = [
     const correct = (2 * 3.14 * r * r + 2 * 3.14 * r * h).toFixed(2);
     const lateral = (2 * 3.14 * r * h).toFixed(2);
     const bases = (2 * 3.14 * r * r).toFixed(2);
+    const basesDistractor = bases === lateral
+      ? (3.14 * r * r).toFixed(2)
+      : bases;
     const stem = rng.pick([
       `What is the total surface area of a cylinder with radius ${r} cm and height ${h} cm? (Use π ≈ 3.14)`,
       `A closed cylindrical container has radius ${r} cm and height ${h} cm. What is its surface area? (Use π ≈ 3.14)`,
@@ -329,7 +332,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       distractors: dedup(`≈ ${correct} cm²`, [
         `≈ ${(3.14 * r * r * h).toFixed(2)} cm²`,
         `≈ ${lateral} cm²`,
-        `≈ ${bases} cm²`,
+        `≈ ${basesDistractor} cm²`,
       ]),
       explanation: `SA = 2πr² + 2πrh ≈ 2(3.14)(${r})² + 2(3.14)(${r})(${h}) = ${bases} + ${lateral} = ${correct} cm². Two circular bases + lateral surface.`,
       difficulty: 'max-out',

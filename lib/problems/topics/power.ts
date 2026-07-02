@@ -590,12 +590,20 @@ const parameterizedQuestions: QuestionFactory[] = [
       correctAnswer: `${c} units`,
       distractors: dedup(`${c} units`, [
         `${a + b} units`,
-        `${c + 2} units`,
-        `${c - 1 < 1 ? c + 3 : c - 1} units`,
+        `${Math.max(a, b)} units`,
+        `${a * b} units`,
       ]),
       explanation: `Horizontal change = |${x2} − ${x1}| = ${a}. Vertical change = |${y2} − ${y1}| = ${b}. Distance = √(${a}² + ${b}²) = √${a * a + b * b} = ${c} units.`,
       difficulty: 'max-out',
       standard: '8.G.B.8',
+      diagram: {
+        type: 'coordinate-grid' as const,
+        points: [
+          { x: x1, y: y1, label: `(${x1}, ${y1})`, color: 'blue' as const },
+          { x: x2, y: y2, label: `(${x2}, ${y2})`, color: 'orange' as const },
+        ],
+        segments: [{ x1, y1, x2, y2 }],
+      },
     };
   },
 
