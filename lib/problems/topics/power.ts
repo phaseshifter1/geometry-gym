@@ -1,19 +1,9 @@
 import type { Rng } from '../rng';
 import type { QuestionFactory } from '../types';
+import { buildDistractors } from '../distractors';
 
 // Power Movement: Pythagorean Theorem, Congruence & Similarity
 // Covers: 8.G.A.2, 8.G.A.4, 8.G.B.7, 8.G.B.8
-
-function dedup(
-  correct: string,
-  ds: [string, string, string]
-): [string, string, string] {
-  const seen = new Set([correct]);
-  return ds.map((d) => {
-    if (!seen.has(d)) { seen.add(d); return d; }
-    return d + '*';
-  }) as [string, string, string];
-}
 
 // Normalised polygon vertex helpers for similar-pair diagrams
 const rectVerts = (w: number, h: number) => {
@@ -275,10 +265,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'pythag-find-hyp',
       question: stem,
       correctAnswer: `${c}`,
-      distractors: dedup(`${c}`, [
+      distractors: buildDistractors(`${c}`, [
         `${a + b}`,
         `${c + 2}`,
         `${c - 1 < 1 ? c + 3 : c - 1}`,
+        `${Math.abs(b - a)}`,
       ]),
       explanation: `c = √(${a}² + ${b}²) = √(${a * a} + ${b * b}) = √${a * a + b * b} = ${c}.`,
       difficulty: 'main-set',
@@ -299,10 +290,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'pythag-find-leg',
       question: stem,
       correctAnswer: `${b}`,
-      distractors: dedup(`${b}`, [
+      distractors: buildDistractors(`${b}`, [
         `${c - a}`,
         `${b + 3}`,
         `${b - 2 < 1 ? b + 5 : b - 2}`,
+        `${c + a}`,
       ]),
       explanation: `b = √(${c}² − ${a}²) = √(${c * c} − ${a * a}) = √${c * c - a * a} = ${b}.`,
       difficulty: 'main-set',
@@ -325,10 +317,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'scale-factor-calc',
       question: choice.stem,
       correctAnswer: `${sf}`,
-      distractors: dedup(`${sf}`, [
+      distractors: buildDistractors(`${sf}`, [
         `${sideB - sideA}`,
         `${sf + 1}`,
         `${sf - 1 < 1 ? sf + 2 : sf - 1}`,
+        `${(1 / sf).toFixed(2)}`,
       ]),
       explanation: `Scale factor = larger ÷ smaller = ${sideB} ÷ ${sideA} = ${sf}.`,
       difficulty: 'main-set',
@@ -356,10 +349,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'similar-missing-side',
       question: stem,
       correctAnswer: `${y} cm`,
-      distractors: dedup(`${y} cm`, [
+      distractors: buildDistractors(`${y} cm`, [
         `${y + sf} cm`,
         `${x + b - a} cm`,
         `${y - 2 < 1 ? y + 4 : y - 2} cm`,
+        `${x} cm`,
       ]),
       explanation: `Scale factor = ${b} ÷ ${a} = ${sf}. Corresponding side = ${x} × ${sf} = ${y} cm.`,
       difficulty: 'main-set',
@@ -386,7 +380,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       correctAnswer: isRight
         ? `Yes — ${a}² + ${b}² = ${sumSq} = ${c}²`
         : `No — ${a}² + ${b}² = ${sumSq} ≠ ${cSq}`,
-      distractors: dedup(
+      distractors: buildDistractors(
         isRight
           ? `Yes — ${a}² + ${b}² = ${sumSq} = ${c}²`
           : `No — ${a}² + ${b}² = ${sumSq} ≠ ${cSq}`,
@@ -415,10 +409,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'diagonal-rect-calc',
       question: stem,
       correctAnswer: `${c} cm`,
-      distractors: dedup(`${c} cm`, [
+      distractors: buildDistractors(`${c} cm`, [
         `${a + b} cm`,
         `${c + 2} cm`,
         `${c - 1 < 1 ? c + 3 : c - 1} cm`,
+        `${Math.abs(b - a)} cm`,
       ]),
       explanation: `Diagonal = √(width² + height²) = √(${a}² + ${b}²) = √(${a * a} + ${b * b}) = √${a * a + b * b} = ${c} cm.`,
       difficulty: 'main-set',
@@ -455,7 +450,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'pythag-real-world-calc',
       question: scenario.q,
       correctAnswer: correct,
-      distractors: dedup(correct, [
+      distractors: buildDistractors(correct, [
         `${a + b} ${correct.slice(-2)}`,
         `${c + 3} ${correct.slice(-2)}`,
         `${c - 2 < 1 ? c + 4 : c - 2} ${correct.slice(-2)}`,
@@ -480,7 +475,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'similar-perimeter',
       question: choice.stem,
       correctAnswer: `${p2} cm`,
-      distractors: dedup(`${p2} cm`, [
+      distractors: buildDistractors(`${p2} cm`, [
         `${p1 + sf} cm`,
         `${p2 + sf} cm`,
         `${p1 * sf * sf} cm`,
@@ -510,10 +505,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'similar-area-ratio',
       question: stem,
       correctAnswer: `${a2} cm²`,
-      distractors: dedup(`${a2} cm²`, [
+      distractors: buildDistractors(`${a2} cm²`, [
         `${a1 * sf} cm²`,
         `${a2 + sf} cm²`,
         `${a1 + sf * sf} cm²`,
+        `${a1} cm²`,
       ]),
       explanation: `Area scales by the square of the scale factor. New area = ${a1} × ${sf}² = ${a1} × ${sf * sf} = ${a2} cm².`,
       difficulty: 'max-out',
@@ -536,7 +532,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'scale-factor-from-areas',
       question: `Two similar shapes have areas ${a1} cm² and ${a2} cm². What is the scale factor from the smaller to the larger?`,
       correctAnswer: `${sf}`,
-      distractors: dedup(`${sf}`, [
+      distractors: buildDistractors(`${sf}`, [
         `${sf * sf}`,
         `${sf + 1}`,
         `${sf - 1 < 1 ? sf + 2 : sf - 1}`,
@@ -563,7 +559,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'pythag-find-hyp-surd',
       question: stem,
       correctAnswer: result,
-      distractors: dedup(result, [
+      distractors: buildDistractors(result, [
         `${a + b}`,
         `√${sumSq + 4} ≈ ${Math.sqrt(sumSq + 4).toFixed(2)}`,
         `${a * b}`,
@@ -588,7 +584,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'pythag-distance-coord',
       question: `What is the distance between points (${x1}, ${y1}) and (${x2}, ${y2})?`,
       correctAnswer: `${c} units`,
-      distractors: dedup(`${c} units`, [
+      distractors: buildDistractors(`${c} units`, [
         `${a + b} units`,
         `${Math.max(a, b)} units`,
         `${a * b} units`,
@@ -620,10 +616,11 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'similar-reverse-scale',
       question: stem,
       correctAnswer: `${sideSmall} cm`,
-      distractors: dedup(`${sideSmall} cm`, [
+      distractors: buildDistractors(`${sideSmall} cm`, [
         `${sideLarge - sf} cm`,
         `${sideSmall + 2} cm`,
         `${Math.round(sideLarge / (sf + 1))} cm`,
+        `${sideLarge} cm`,
       ]),
       explanation: `Smaller side = larger side ÷ scale factor = ${sideLarge} ÷ ${sf} = ${sideSmall} cm.`,
       difficulty: 'main-set',

@@ -1,0 +1,42 @@
+import { expect, test } from '@playwright/test';
+import { buildDistractors } from '../lib/problems/distractors';
+import { generateWorkout } from '../lib/problems/generator';
+
+test('buildDistractors returns the first three unique incorrect choices', () => {
+  expect(buildDistractors('5', ['5', '7', '7', '4', '', '12'])).toEqual([
+    '7',
+    '4',
+    '12',
+  ]);
+});
+
+test('buildDistractors rejects an incomplete answer set', () => {
+  expect(() => buildDistractors('5', ['5', '7', '7', '4'])).toThrow(
+    'Expected 3 unique distractors',
+  );
+});
+
+test('Power Movement generates only valid multiple-choice answer sets', () => {
+  let firstFailure: string | null = null;
+
+  for (let seed = 0; seed < 10_000; seed += 1) {
+    const problems = generateWorkout('power', `integrity-${seed}`);
+
+    for (const problem of problems) {
+      const valid = problem.choices.length === 4
+        && new Set(problem.choices).size === 4
+        && problem.choices.every(choice => choice.trim().length > 0)
+        && problem.choices.filter(choice => choice === problem.correctAnswer).length === 1
+        && !problem.choices.some(choice => /[\*†]$/.test(choice));
+
+      if (!valid) {
+        firstFailure = `seed=${seed}, id=${problem.id}, choices=${JSON.stringify(problem.choices)}`;
+        break;
+      }
+    }
+
+    if (firstFailure) break;
+  }
+
+  expect(firstFailure).toBeNull();
+});
