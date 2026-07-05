@@ -31,6 +31,7 @@ export type DiagramSpec =
       highlightLine?: 'x-axis' | 'y-axis' | 'y=x';
     }
   | { type: 'cuboid'; length: number; width: number; height: number; unknownDimension?: 'length' | 'width' | 'height'; lengthLabel?: string; widthLabel?: string; heightLabel?: string }
+  | { type: 'square-pyramid'; baseSide: number; height: number }
   | { type: 'cylinder-3d'; radius: number; height: number; unknownDimension?: 'radius' | 'height'; radiusLabel?: string; heightLabel?: string }
   | { type: 'l-shape'; outerWidth: number; outerHeight: number; cutWidth: number; cutHeight: number }
   | { type: 'rect-with-hole'; outerWidth: number; outerHeight: number; innerWidth: number; innerHeight: number }

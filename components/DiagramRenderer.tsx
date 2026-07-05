@@ -1407,6 +1407,30 @@ function CuboidDiagram({ length: l, width: w, height: h, unknownDimension, lengt
   );
 }
 
+function SquarePyramidDiagram({ baseSide, height }: { baseSide: number; height: number }) {
+  const apex = { x: 160, y: 28 };
+  const frontLeft = { x: 72, y: 176 };
+  const frontRight = { x: 214, y: 176 };
+  const backRight = { x: 248, y: 132 };
+  const backLeft = { x: 106, y: 132 };
+  const baseCenter = { x: 160, y: 154 };
+
+  return (
+    <svg viewBox="0 0 320 220" width="100%" style={{ maxWidth: '500px' }} aria-label="Square pyramid">
+      <polygon points={`${frontLeft.x},${frontLeft.y} ${frontRight.x},${frontRight.y} ${apex.x},${apex.y}`}
+        fill="#FFF7ED" stroke="#F97316" strokeWidth="2" strokeLinejoin="round" />
+      <polygon points={`${frontRight.x},${frontRight.y} ${backRight.x},${backRight.y} ${apex.x},${apex.y}`}
+        fill="#FEF3E8" stroke="#F97316" strokeWidth="2" strokeLinejoin="round" />
+      <line x1={backLeft.x} y1={backLeft.y} x2={backRight.x} y2={backRight.y} stroke="#F97316" strokeDasharray="4 3" />
+      <line x1={backLeft.x} y1={backLeft.y} x2={frontLeft.x} y2={frontLeft.y} stroke="#F97316" strokeDasharray="4 3" />
+      <line x1={backLeft.x} y1={backLeft.y} x2={apex.x} y2={apex.y} stroke="#F97316" strokeDasharray="4 3" />
+      <line x1={apex.x} y1={apex.y} x2={baseCenter.x} y2={baseCenter.y} stroke="#6B21A8" strokeWidth="1.5" strokeDasharray="5 3" />
+      <text x="143" y="96" textAnchor="end" fontSize="13" fontWeight="700" fill="#6B21A8">{height}</text>
+      <text x="143" y="198" textAnchor="middle" fontSize="13" fontWeight="700" fill="#9A3412">{baseSide}</text>
+    </svg>
+  );
+}
+
 // ─── Cylinder 3D ──────────────────────────────────────────────────────────────
 
 function Cylinder3DDiagram({ radius: r, height: h, unknownDimension, radiusLabel, heightLabel }: {
@@ -1802,6 +1826,8 @@ export function DiagramRenderer({ spec }: { spec: DiagramSpec }) {
       return <CoordinateGridDiagram points={spec.points} segments={spec.segments} highlightLine={spec.highlightLine} />;
     case 'cuboid':
       return <CuboidDiagram length={spec.length} width={spec.width} height={spec.height} unknownDimension={spec.unknownDimension} lengthLabel={spec.lengthLabel} widthLabel={spec.widthLabel} heightLabel={spec.heightLabel} />;
+    case 'square-pyramid':
+      return <SquarePyramidDiagram baseSide={spec.baseSide} height={spec.height} />;
     case 'cylinder-3d':
       return <Cylinder3DDiagram radius={spec.radius} height={spec.height} unknownDimension={spec.unknownDimension} radiusLabel={spec.radiusLabel} heightLabel={spec.heightLabel} />;
     case 'triangular-prism':

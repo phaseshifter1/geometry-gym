@@ -1,19 +1,16 @@
 import type { Rng } from '../rng';
 import type { QuestionFactory, DiagramSpec } from '../types';
 import { SHAPE_OBJECTS, LOCATIONS } from '../scenarios';
+import { buildNumericDistractors } from '../distractors';
 
 // Shape & Form: Polygons, Triangles, Symmetry
 // Covers: 3.G.A.1, 4.G.A.2, 5.G.B.3, 6.G.A.1, 4.G.A.3, 8.G.A.5
 
 function dedup(
   correct: string,
-  ds: [string, string, string],
+  ds: readonly string[],
 ): [string, string, string] {
-  const seen = new Set([correct]);
-  return ds.map((d) => {
-    if (!seen.has(d)) { seen.add(d); return d; }
-    return d + '†';
-  }) as [string, string, string];
+  return buildNumericDistractors(correct, ds);
 }
 
 // ─── Polygon name/sides lookup ────────────────────────────────────────────────
@@ -124,7 +121,7 @@ const polygonQuestions: QuestionFactory[] = [
       id: 'polygon-name-from-sides',
       question: rng.pick(questions),
       correctAnswer: name,
-      distractors: dedup(name, [below, above, n === 7 ? 'octagon' : 'heptagon']),
+      distractors: dedup(name, [below, above, 'triangle']),
       explanation: `A polygon with ${n} sides is a ${name}. Remembering prefixes helps: penta- (5), hexa- (6), hepta- (7), octa- (8), nona- (9), deca- (10).`,
       difficulty: 'warm-up',
       standard: '3.G.A.1',
@@ -251,6 +248,7 @@ const polygonQuestions: QuestionFactory[] = [
         `${(n - 1) * 180}°`,
         `${n * 90}°`,
         `${correct + 180}°`,
+        `${correct - 180}°`,
       ]),
       explanation: `Interior angle sum = (n − 2) × 180°. For a ${name} (n = ${n}): (${n} − 2) × 180° = ${n - 2} × 180° = ${correct}°.`,
       difficulty: 'main-set',

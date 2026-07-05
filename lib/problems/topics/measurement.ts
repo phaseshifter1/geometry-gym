@@ -1,18 +1,15 @@
 import type { Rng } from '../rng';
 import type { QuestionFactory } from '../types';
+import { buildNumericDistractors } from '../distractors';
 
 // The Measurement Room: Area & Perimeter (2D)
 // Covers: 3.MD.C.5, 3.MD.C.7, 3.MD.D.8, 6.G.A.1, 7.G.B.4
 
 function dedup(
   correct: string,
-  ds: [string, string, string]
+  ds: readonly string[]
 ): [string, string, string] {
-  const seen = new Set([correct]);
-  return ds.map((d) => {
-    if (!seen.has(d)) { seen.add(d); return d; }
-    return d + '*';
-  }) as [string, string, string];
+  return buildNumericDistractors(correct, ds);
 }
 
 // ─── Static conceptual questions ──────────────────────────────────────────────
@@ -289,6 +286,7 @@ const parameterizedQuestions: QuestionFactory[] = [
         `${s * s} cm`,
         `${2 * s} cm`,
         `${3 * s} cm`,
+        `${5 * s} cm`,
       ]),
       explanation: `Perimeter = 4 × side = 4 × ${s} = ${correct} cm.`,
       difficulty: 'warm-up',

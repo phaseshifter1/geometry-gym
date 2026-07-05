@@ -28,3 +28,29 @@ export function buildDistractors(
     `Expected 3 unique distractors for correct answer "${correctAnswer}", received ${unique.length}.`,
   );
 }
+
+/**
+ * Preserves authored distractors, then fills rare numeric collisions with
+ * nearby values using the correct answer's existing prefix, precision, and unit.
+ */
+export function buildNumericDistractors(
+  correctAnswer: string,
+  candidates: readonly string[],
+): DistractorTuple {
+  const match = correctAnswer.match(/-?\d+(?:\.\d+)?/);
+  if (!match) return buildDistractors(correctAnswer, candidates);
+
+  const value = Number(match[0]);
+  const decimals = match[0].includes('.') ? match[0].split('.')[1].length : 0;
+  const format = (next: number) => correctAnswer.replace(match[0], next.toFixed(decimals));
+  const step = decimals > 0 ? 10 ** -decimals : 1;
+
+  return buildDistractors(correctAnswer, [
+    ...candidates,
+    format(value + step),
+    format(value - step),
+    format(value + 2 * step),
+    format(value - 2 * step),
+    format(value + 5 * step),
+  ]);
+}

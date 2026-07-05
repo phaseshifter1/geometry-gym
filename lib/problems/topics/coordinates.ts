@@ -1,19 +1,9 @@
 import type { Rng } from '../rng';
 import type { QuestionFactory } from '../types';
+import { buildDistractors } from '../distractors';
 
 // The Track: Coordinates & Transformations
 // Covers: 5.G.A.1, 5.G.A.2, 6.NS.C.6, 8.G.A.1, 8.G.A.3
-
-function dedup(
-  correct: string,
-  ds: [string, string, string]
-): [string, string, string] {
-  const seen = new Set([correct]);
-  return ds.map((d) => {
-    if (!seen.has(d)) { seen.add(d); return d; }
-    return d + '*';
-  }) as [string, string, string];
-}
 
 // ─── Coordinate Plane ─────────────────────────────────────────────────────────
 
@@ -268,7 +258,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'identify-quadrant',
       question: `In which quadrant does the point (${x}, ${y}) lie?`,
       correctAnswer: correct,
-      distractors: dedup(correct, others),
+      distractors: buildDistractors(correct, others),
       explanation: `x = ${x} (${x > 0 ? 'positive → right' : 'negative → left'}), y = ${y} (${y > 0 ? 'positive → up' : 'negative → down'}). That puts it in Quadrant ${quadrants[qi]}.`,
       difficulty: 'warm-up',
       standard: '6.NS.C.6',
@@ -295,10 +285,13 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'translation-calc',
       question: stem,
       correctAnswer: `(${nx}, ${ny})`,
-      distractors: dedup(`(${nx}, ${ny})`, [
+      distractors: buildDistractors(`(${nx}, ${ny})`, [
         `(${nx + 1}, ${ny})`,
         `(${nx}, ${ny + 1})`,
         `(${x - dx}, ${y - dy})`,
+        `(${nx - 1}, ${ny})`,
+        `(${nx}, ${ny - 1})`,
+        `(${x + dy}, ${y + dx})`,
       ]),
       explanation: `New x = ${x} + (${dx}) = ${nx}. New y = ${y} + (${dy}) = ${ny}. Result: (${nx}, ${ny}).`,
       difficulty: 'main-set',
@@ -323,10 +316,12 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'distance-same-axis',
       question: `What is the distance between points ${p1} and ${p2}?`,
       correctAnswer: `${dist} units`,
-      distractors: dedup(`${dist} units`, [
+      distractors: buildDistractors(`${dist} units`, [
         `${dist + 2} units`,
         `${Math.abs(a + b)} units`,
         `${dist - 1 < 0 ? dist + 3 : dist - 1} units`,
+        `${dist + 1} units`,
+        `${dist + 3} units`,
       ]),
       explanation: `The points share the same ${axis === 'x' ? 'y' : 'x'}-value, so distance = |${b} − (${a})| = ${dist} units.`,
       difficulty: 'main-set',
@@ -360,10 +355,12 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'reflection-x-calc',
       question: stem,
       correctAnswer: `(${x}, ${ny})`,
-      distractors: dedup(`(${x}, ${ny})`, [
+      distractors: buildDistractors(`(${x}, ${ny})`, [
         `(${-x}, ${y})`,
         `(${-x}, ${ny})`,
         `(${x}, ${y})`,
+        `(${ny}, ${x})`,
+        `(${x + 1}, ${ny})`,
       ]),
       explanation: `Reflecting over the x-axis: (x, y) → (x, −y). So (${x}, ${y}) → (${x}, ${ny}).`,
       difficulty: 'main-set',
@@ -391,10 +388,12 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'reflection-y-calc',
       question: stem,
       correctAnswer: `(${nx}, ${y})`,
-      distractors: dedup(`(${nx}, ${y})`, [
+      distractors: buildDistractors(`(${nx}, ${y})`, [
         `(${x}, ${-y})`,
         `(${nx}, ${-y})`,
         `(${x}, ${y})`,
+        `(${y}, ${nx})`,
+        `(${nx}, ${y + 1})`,
       ]),
       explanation: `Reflecting over the y-axis: (x, y) → (−x, y). So (${x}, ${y}) → (${nx}, ${y}).`,
       difficulty: 'main-set',
@@ -417,10 +416,12 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'rotation-180-calc',
       question: `Point (${x}, ${y}) is rotated 180° about the origin. What are the new coordinates?`,
       correctAnswer: `(${-x}, ${-y})`,
-      distractors: dedup(`(${-x}, ${-y})`, [
+      distractors: buildDistractors(`(${-x}, ${-y})`, [
         `(${y}, ${-x})`,
         `(${-y}, ${x})`,
         `(${x}, ${-y})`,
+        `(${-x}, ${y})`,
+        `(${x}, ${y})`,
       ]),
       explanation: `A 180° rotation maps (x, y) → (−x, −y). So (${x}, ${y}) → (${-x}, ${-y}).`,
       difficulty: 'main-set',
@@ -444,10 +445,13 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'rotation-90cw-calc',
       question: `Point (${x}, ${y}) is rotated 90° clockwise about the origin. What are the new coordinates?`,
       correctAnswer: `(${nx}, ${ny})`,
-      distractors: dedup(`(${nx}, ${ny})`, [
+      distractors: buildDistractors(`(${nx}, ${ny})`, [
         `(${-y}, ${x})`,
         `(${-x}, ${-y})`,
         `(${-nx}, ${-ny})`,
+        `(${x}, ${y})`,
+        `(${-x}, ${y})`,
+        `(${x}, ${-y})`,
       ]),
       explanation: `A 90° clockwise rotation maps (x, y) → (y, −x). So (${x}, ${y}) → (${nx}, ${ny}).`,
       difficulty: 'max-out',
@@ -471,10 +475,12 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'midpoint-calc',
       question: `What is the midpoint of the segment joining (${x1}, ${y1}) and (${x2}, ${y2})?`,
       correctAnswer: `(${mx}, ${my})`,
-      distractors: dedup(`(${mx}, ${my})`, [
+      distractors: buildDistractors(`(${mx}, ${my})`, [
         `(${x1 + x2}, ${y1 + y2})`,
         `(${mx + 1}, ${my})`,
         `(${mx}, ${my + 1})`,
+        `(${mx - 1}, ${my})`,
+        `(${mx}, ${my - 1})`,
       ]),
       explanation: `Midpoint = ((${x1}+${x2})/2, (${y1}+${y2})/2) = (${x1 + x2}/2, ${y1 + y2}/2) = (${mx}, ${my}).`,
       difficulty: 'main-set',
@@ -502,7 +508,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'point-on-axis-calc',
       question: `The point ${pt} lies ___?`,
       correctAnswer: `${correct}, ${dist} units ${dir} the origin`,
-      distractors: dedup(`${correct}, ${dist} units ${dir} the origin`, [
+      distractors: buildDistractors(`${correct}, ${dist} units ${dir} the origin`, [
         onYAxis ? `On the x-axis, ${dist} units right of the origin` : `On the y-axis, ${dist} units above the origin`,
         'At the origin (0, 0)',
         `In Quadrant ${onYAxis && val > 0 ? 'I' : onYAxis && val < 0 ? 'III' : val > 0 ? 'IV' : 'II'}`,
@@ -530,10 +536,13 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'distance-pythagorean',
       question: `What is the distance between points (${x1}, ${y1}) and (${x2}, ${y2})?`,
       correctAnswer: `${c} units`,
-      distractors: dedup(`${c} units`, [
+      distractors: buildDistractors(`${c} units`, [
         `${a + b} units`,
         `${c + 2} units`,
         `${Math.round(Math.sqrt(a * a + b * b + 4))} units`,
+        `${c - 1} units`,
+        `${c + 1} units`,
+        `${Math.abs(a - b)} units`,
       ]),
       explanation: `Horizontal distance = |${x2} − ${x1}| = ${a}. Vertical distance = |${y2} − ${y1}| = ${b}. Distance = √(${a}² + ${b}²) = √${a * a + b * b} = ${c} units.`,
       difficulty: 'max-out',
@@ -563,10 +572,13 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'reflection-y-equals-x',
       question: `Point (${x}, ${y}) is reflected over the line y = x. What are the new coordinates?`,
       correctAnswer: `(${y}, ${x})`,
-      distractors: dedup(`(${y}, ${x})`, [
+      distractors: buildDistractors(`(${y}, ${x})`, [
         `(${-x}, ${-y})`,
         `(${-y}, ${x})`,
         `(${x}, ${-y})`,
+        `(${x}, ${y})`,
+        `(${y}, ${-x})`,
+        `(${-y}, ${-x})`,
       ]),
       explanation: `Reflecting over y = x swaps the coordinates: (x, y) → (y, x). So (${x}, ${y}) → (${y}, ${x}).`,
       difficulty: 'max-out',

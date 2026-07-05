@@ -1,26 +1,16 @@
 import type { Rng } from '../rng';
 import type { QuestionFactory } from '../types';
 import { SHAPE_OBJECTS, LOCATIONS } from '../scenarios';
+import { buildNumericDistractors } from '../distractors';
 
 // Foundations: Points, Lines, Segments, Rays, Planes + Angles
 // Covers: 4.G.A.1, 4.MD.C.5, 7.G.B.5, 8.G.A.5
 
 function dedup(
   correct: string,
-  ds: [string, string, string]
+  ds: readonly string[]
 ): [string, string, string] {
-  const seen = new Set([correct]);
-  return ds.map((d) => {
-    if (!seen.has(d)) { seen.add(d); return d; }
-    const n = parseFloat(d);
-    if (!isNaN(n)) {
-      for (let bump = 5; bump <= 100; bump += 5) {
-        const candidate = `${n + bump}°`;
-        if (!seen.has(candidate)) { seen.add(candidate); return candidate; }
-      }
-    }
-    return d + '†';
-  }) as [string, string, string];
+  return buildNumericDistractors(correct, ds);
 }
 
 // ─── Real-world line/ray/segment contexts ────────────────────────────────────
@@ -510,7 +500,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       id: 'linear-pair-find',
       question: rng.pick(questions),
       correctAnswer: `${correct}°`,
-      distractors: dedup(`${correct}°`, [`${90 - Math.min(a, 89)}°`, `${a}°`, `${correct + 15}°`]),
+      distractors: dedup(`${correct}°`, [`${90 - Math.min(a, 89)}°`, `${a}°`, `${correct + 15}°`, `${correct - 15}°`]),
       explanation: `Angles on a straight line add up to 180°. Other angle = 180° − ${a}° = ${correct}°.`,
       difficulty: 'main-set',
       standard: '7.G.B.5',

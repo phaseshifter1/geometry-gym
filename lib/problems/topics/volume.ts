@@ -1,18 +1,15 @@
 import type { Rng } from '../rng';
 import type { QuestionFactory } from '../types';
+import { buildNumericDistractors } from '../distractors';
 
 // Heavy Lifts: Volume & Surface Area (3D shapes)
 // Covers: 5.MD.C.3, 5.MD.C.4, 5.MD.C.5, 6.G.A.2, 6.G.A.4, 7.G.B.6
 
 function dedup(
   correct: string,
-  ds: [string, string, string]
+  ds: readonly string[]
 ): [string, string, string] {
-  const seen = new Set([correct]);
-  return ds.map((d) => {
-    if (!seen.has(d)) { seen.add(d); return d; }
-    return d + '*';
-  }) as [string, string, string];
+  return buildNumericDistractors(correct, ds);
 }
 
 // ─── Static conceptual questions ──────────────────────────────────────────────
@@ -333,6 +330,7 @@ const parameterizedQuestions: QuestionFactory[] = [
         `≈ ${(3.14 * r * r * h).toFixed(2)} cm²`,
         `≈ ${lateral} cm²`,
         `≈ ${basesDistractor} cm²`,
+        `≈ ${(Number(correct) + 3.14 * r).toFixed(2)} cm²`,
       ]),
       explanation: `SA = 2πr² + 2πrh ≈ 2(3.14)(${r})² + 2(3.14)(${r})(${h}) = ${bases} + ${lateral} = ${correct} cm². Two circular bases + lateral surface.`,
       difficulty: 'max-out',
@@ -487,6 +485,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `V = s³ → s = ∛${vol} = ${s} cm. Check: ${s}³ = ${vol} ✓`,
       difficulty: 'max-out',
       standard: '5.MD.C.5',
+      diagram: { type: 'cuboid' as const, length: s, width: s, height: s, unknownDimension: 'length' as const },
     };
   },
 
@@ -511,6 +510,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `V = ⅓ × base area × height = ⅓ × ${s}² × ${h} = ⅓ × ${s * s} × ${h} = ${correct} cm³.`,
       difficulty: 'max-out',
       standard: '7.G.B.6',
+      diagram: { type: 'square-pyramid' as const, baseSide: s, height: h },
     };
   },
 
@@ -531,6 +531,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       explanation: `A cube has 6 identical faces. SA = 6 × ${faceArea} = ${correct} cm².`,
       difficulty: 'main-set',
       standard: '6.G.A.4',
+      diagram: { type: 'cuboid' as const, length: s, width: s, height: s },
     };
   },
 
@@ -576,7 +577,7 @@ const parameterizedQuestions: QuestionFactory[] = [
       distractors: dedup(`${vNew} cm³`, [
         `${vOld} cm³`,
         `${4 * vOld} cm³`,
-        `${vOld + l * w * h} cm³`,
+        `${3 * vOld} cm³`,
       ]),
       explanation: `New volume = ${2 * l} × ${w} × ${h} = ${vNew} cm³. Doubling one dimension doubles the volume: ${vOld} × 2 = ${vNew} cm³.`,
       difficulty: 'max-out',
