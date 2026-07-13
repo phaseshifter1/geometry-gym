@@ -58,8 +58,8 @@ export function InterestField({ initial, initialId }: { initial: string | null; 
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-6">
-      <p className="text-xs font-semibold uppercase tracking-widest text-muted mb-3">
+    <div className="rounded-2xl border border-[#D7E2EC] bg-[#F3F7FA] p-6 shadow-lg shadow-black/10">
+      <p className="text-xs font-semibold uppercase tracking-widest text-accent-dark mb-3">
         Your Interest
       </p>
 
@@ -77,7 +77,7 @@ export function InterestField({ initial, initialId }: { initial: string | null; 
               if (e.key === 'Escape') { setValue(saved ?? ''); setEditing(false); }
             }}
             placeholder="e.g. football, music, architecture…"
-            className="flex-1 rounded-xl border border-border bg-white px-4 py-2 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="flex-1 rounded-xl border border-[#D7E2EC] bg-white px-4 py-2 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-accent/40"
           />
           <span className="text-xs w-12 text-right shrink-0 text-muted">
             {status === 'saving' ? 'Saving…' : ''}
@@ -92,7 +92,7 @@ export function InterestField({ initial, initialId }: { initial: string | null; 
           )}
           <button
             onClick={() => setEditing(true)}
-            className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-dark transition-colors shrink-0"
+            className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-accent-dark transition-colors shrink-0"
           >
             <Pencil className="h-3.5 w-3.5" />
             {saved ? 'Change' : 'Add'}

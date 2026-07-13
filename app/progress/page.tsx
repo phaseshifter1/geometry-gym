@@ -71,16 +71,16 @@ export default async function ProgressPage() {
   const topicsExplored = topicStats.filter((t) => t.sessionCount > 0).length;
 
   return (
-    <div className="min-h-screen bg-white font-sans text-dark">
+    <div className="min-h-screen bg-[#111827] font-sans text-[#F8FAFC]">
       {/* Nav */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 border-b border-border bg-white/95 text-dark backdrop-blur-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link
             href="/"
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
             <Dumbbell className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold tracking-tight">
+            <span className="text-xl font-bold tracking-tight text-dark">
               Geometry Gym
             </span>
           </Link>
@@ -93,17 +93,20 @@ export default async function ProgressPage() {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-4xl px-6 py-12">
-        <h1 className="text-3xl font-extrabold tracking-tight text-dark">
+      <main className="mx-auto max-w-5xl px-6 py-12">
+        <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+          Training Log
+        </p>
+        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-[#F8FAFC]">
           My Progress
         </h1>
-        <p className="mt-1 text-base text-muted">
+        <p className="mt-2 text-base text-[#CBD5E1]">
           {user.email ?? 'Your workout history'}
         </p>
 
         {/* Summary row */}
-        <div className="mt-8 grid grid-cols-3 gap-4">
-          <div className="rounded-2xl border border-border bg-surface p-6 text-center">
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-[#D7E2EC] bg-[#F3F7FA] p-6 text-center shadow-lg shadow-black/10">
             <p className="text-4xl font-extrabold text-primary">
               {totalQuestions}
             </p>
@@ -111,15 +114,15 @@ export default async function ProgressPage() {
               Questions Answered
             </p>
           </div>
-          <div className="rounded-2xl border border-border bg-surface p-6 text-center">
-            <p className="text-4xl font-extrabold text-primary">
+          <div className="rounded-2xl border border-[#D7E2EC] bg-[#F3F7FA] p-6 text-center shadow-lg shadow-black/10">
+            <p className="text-4xl font-extrabold text-accent-dark">
               {totalQuestions > 0 ? `${overallAccuracy}%` : '—'}
             </p>
             <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-muted">
               Overall Accuracy
             </p>
           </div>
-          <div className="rounded-2xl border border-border bg-surface p-6 text-center">
+          <div className="rounded-2xl border border-[#D7E2EC] bg-[#F3F7FA] p-6 text-center shadow-lg shadow-black/10">
             <p className="text-4xl font-extrabold text-primary">
               {topicsExplored} / {ALL_TOPICS.length}
             </p>
@@ -136,13 +139,13 @@ export default async function ProgressPage() {
 
         {/* Per-topic table */}
         <div className="mt-10">
-          <h2 className="mb-4 text-lg font-bold text-dark">
+          <h2 className="mb-4 text-lg font-bold text-[#F8FAFC]">
             Breakdown by Topic
           </h2>
-          <div className="overflow-hidden rounded-2xl border border-border">
+          <div className="overflow-hidden rounded-2xl border border-[#D7E2EC] bg-[#F8FAFC] shadow-xl shadow-black/20">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border bg-surface text-left text-xs font-semibold uppercase tracking-widest text-muted">
+                <tr className="border-b border-[#D7E2EC] bg-[#EAF7FE] text-left text-xs font-semibold uppercase tracking-widest text-accent-dark">
                   <th className="px-5 py-3">Topic</th>
                   <th className="px-5 py-3 text-right">Sessions</th>
                   <th className="px-5 py-3 text-right">Questions</th>
@@ -151,17 +154,17 @@ export default async function ProgressPage() {
                   <th className="px-5 py-3 text-right">Last Trained</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-y divide-[#D7E2EC]">
                 {topicStats.map((t) => (
                   <tr
                     key={t.topicId}
-                    className={t.sessionCount === 0 ? 'opacity-40' : ''}
+                    className={t.sessionCount === 0 ? 'bg-white/60' : 'bg-white'}
                   >
                     <td className="px-5 py-4 font-medium text-dark">
                       {t.sessionCount > 0 ? (
                         <Link
                           href={`/workout/${t.slug}?mode=practice`}
-                          className="hover:text-primary transition-colors"
+                          className="hover:text-accent-dark transition-colors"
                         >
                           {t.label}
                         </Link>
@@ -206,7 +209,7 @@ export default async function ProgressPage() {
         </div>
 
         {sessions.length === 0 && (
-          <div className="mt-10 rounded-2xl border border-dashed border-border p-12 text-center">
+          <div className="mt-10 rounded-2xl border border-dashed border-[#D7E2EC] bg-[#F8FAFC] p-12 text-center shadow-xl shadow-black/20">
             <p className="text-lg font-semibold text-dark">
               No workouts yet — go get your first reps in!
             </p>
@@ -220,7 +223,7 @@ export default async function ProgressPage() {
         )}
 
         {/* Feedback callout */}
-        <div className="mt-12 rounded-2xl border border-primary/20 bg-primary/5 px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-12 rounded-2xl border border-primary/20 bg-[#FFF7ED] px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl shadow-black/20">
           <div>
             <p className="font-bold text-dark">How is Geometry Gym working for you?</p>
             <p className="mt-1 text-sm text-muted">Your feedback shapes what gets built next. It takes 2 minutes.</p>
