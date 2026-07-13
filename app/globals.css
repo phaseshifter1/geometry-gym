@@ -7,8 +7,9 @@
   --color-muted: #334155;
   --color-border: #E2E8F0;
   --color-dark: #0F172A;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-heading-family: var(--font-heading);
+  --font-mono: var(--font-math);
 }
 
 @keyframes slideUp {
@@ -19,6 +20,19 @@
 body {
   background: #ffffff;
   color: #0F172A;
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), var(--font-body), system-ui, sans-serif;
+}
+
+.math-text {
+  font-family: var(--font-math), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
