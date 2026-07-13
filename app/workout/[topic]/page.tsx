@@ -154,7 +154,7 @@ function CoachPanel({
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white transition-colors hover:bg-primary-dark disabled:opacity-40"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-dark text-white transition-colors hover:bg-accent disabled:opacity-40"
           >
             <Send className="h-4 w-4" />
           </button>
@@ -267,23 +267,23 @@ function FinishedScreen({
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#111827] px-6 text-center">
       <Trophy className="mb-4 h-16 w-16 text-primary" />
-      <h1 className="text-3xl font-extrabold text-dark">Workout Complete!</h1>
+      <h1 className="text-3xl font-extrabold text-[#F8FAFC]">Workout Complete!</h1>
       <p className="mt-2 text-6xl font-extrabold text-primary">
         {score}/{total}
       </p>
-      <p className="mt-1 text-sm font-semibold uppercase tracking-widest text-muted">
+      <p className="mt-1 text-sm font-semibold uppercase tracking-widest text-[#CBD5E1]">
         {topicLabel}
       </p>
-      <p className="mx-auto mt-6 max-w-sm text-base text-muted">{message}</p>
+      <p className="mx-auto mt-6 max-w-sm text-base text-[#CBD5E1]">{message}</p>
 
       {/* AI insight */}
       <div className="mx-auto mt-4 max-w-md">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted">
+        <p className="text-xs font-semibold uppercase tracking-widest text-accent">
           {personalizedInsightReady ? 'Personalized coach tip' : 'Coach tip'}
         </p>
-        <p className="mt-1 text-base text-dark italic">{insight}</p>
+        <p className="mt-1 text-base text-[#F8FAFC] italic">{insight}</p>
       </div>
 
       {/* Insight feedback */}
@@ -294,20 +294,20 @@ function FinishedScreen({
               <button
                 onClick={() => submitFeedback(true)}
                 aria-label="Thumbs up"
-                className="text-muted hover:text-primary transition-colors"
+                className="text-[#CBD5E1] transition-colors hover:text-accent"
               >
                 <ThumbsUp className="h-5 w-5" />
               </button>
               <button
                 onClick={() => submitFeedback(false)}
                 aria-label="Thumbs down"
-                className="text-muted hover:text-primary transition-colors"
+                className="text-[#CBD5E1] transition-colors hover:text-accent"
               >
                 <ThumbsDown className="h-5 w-5" />
               </button>
             </>
           ) : (
-            <p className="text-sm text-muted">Thank you for your feedback!</p>
+            <p className="text-sm text-[#CBD5E1]">Thank you for your feedback!</p>
           )}
         </div>
       )}
@@ -342,7 +342,7 @@ function FinishedScreen({
       <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
         <button
           onClick={onRetry}
-          className="flex items-center gap-2 rounded-full border border-border px-6 py-3 font-semibold text-dark transition-colors hover:bg-surface"
+          className="flex items-center gap-2 rounded-full border border-[#263241] px-6 py-3 font-semibold text-[#F8FAFC] transition-colors hover:bg-[#18212F]"
         >
           <RotateCcw className="h-4 w-4" />
           Try Again
@@ -357,7 +357,7 @@ function FinishedScreen({
       </div>
       <a
         href="/feedback"
-        className="mt-6 text-sm text-muted hover:text-primary transition-colors underline underline-offset-4"
+        className="mt-6 text-sm text-[#CBD5E1] transition-colors hover:text-accent underline underline-offset-4"
       >
         How was that? Leave feedback →
       </a>
@@ -548,13 +548,13 @@ function WorkoutPageInner() {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-[#111827]">
       {/* Main content */}
       <div className="flex flex-1 flex-col">
 
         {/* Top bar — auto-hide */}
         <div
-          className="fixed top-0 left-0 right-0 z-10 border-b border-border bg-white px-6 py-4 transition-transform duration-300"
+          className="fixed top-0 left-0 right-0 z-10 border-b border-border bg-white/95 px-6 py-4 shadow-sm backdrop-blur-sm transition-transform duration-300"
           style={{ transform: navVisible ? 'translateY(0)' : 'translateY(-100%)' }}
         >
           <div className="mx-auto flex max-w-2xl md:max-w-3xl items-center justify-between">
@@ -594,7 +594,7 @@ function WorkoutPageInner() {
 
         {/* Question card */}
         <div className={`flex flex-1 flex-col items-center px-6 py-10 ${answered ? 'pb-56' : ''}`}>
-          <div className="w-full max-w-2xl md:max-w-3xl">
+          <div className="w-full max-w-2xl rounded-2xl border border-[#D7E2EC] bg-[#F8FAFC] px-6 py-7 shadow-xl shadow-black/20 md:max-w-3xl md:px-8">
 
             {/* Difficulty badge */}
             <span
@@ -671,7 +671,7 @@ function WorkoutPageInner() {
             <div className="mt-6">
               <button
                 onClick={() => { setCoachOpen((o) => !o); coachEverOpened.current = true; }}
-                className="flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-primary"
+                className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-2 text-sm font-semibold text-accent-dark transition-colors hover:bg-accent/15"
               >
                 <MessageCircle className="h-4 w-4" />
                 Ask Coach
@@ -726,7 +726,7 @@ function WorkoutPageInner() {
       <button
         onClick={() => { setCoachOpen((o) => !o); coachEverOpened.current = true; }}
         className="fixed z-50 flex flex-col items-center gap-2 px-2 py-4 rounded-l-xl shadow-lg text-white font-semibold text-sm"
-        style={{ backgroundColor: '#F97316', right: coachOpen ? '320px' : '0', top: '50%', transform: 'translateY(-50%)' }}
+        style={{ backgroundColor: '#0EA5E9', right: coachOpen ? '320px' : '0', top: '50%', transform: 'translateY(-50%)' }}
       >
         <MessageCircle className="h-4 w-4" />
         <span style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', letterSpacing: '0.05em' }}>
@@ -737,7 +737,7 @@ function WorkoutPageInner() {
       {/* Coach panel */}
       {coachOpen && problem && (
         <div
-          className="flex w-full max-w-sm flex-col border-l border-border bg-white sm:w-80 fixed right-0 top-0 bottom-0 z-40 shadow-xl"
+          className="fixed bottom-0 right-0 top-0 z-40 flex w-full max-w-sm flex-col border-l border-[#D7E2EC] bg-white shadow-xl sm:w-80"
         >
           <CoachPanel
             problem={problem}
