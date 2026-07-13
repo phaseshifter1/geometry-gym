@@ -3,6 +3,8 @@
 @theme inline {
   --color-primary: #FF7A1A;
   --color-primary-dark: #E85D04;
+  --color-accent: #38BDF8;
+  --color-accent-dark: #0EA5E9;
   --color-page-dark: #111827;
   --color-page-darker: #121417;
   --color-text-on-dark: #F8FAFC;

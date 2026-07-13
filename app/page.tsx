@@ -214,7 +214,7 @@ export default function Home() {
           </Link>
           <a
             href="#topics"
-            className="flex items-center gap-2 rounded-full border border-[#263241] px-7 py-3.5 text-base font-semibold text-[#F8FAFC] transition-colors hover:bg-[#18212F]"
+            className="flex items-center gap-2 rounded-full border border-accent/45 px-7 py-3.5 text-base font-semibold text-accent transition-colors hover:border-accent hover:bg-accent/10"
           >
             Browse Topics
           </a>
@@ -266,7 +266,7 @@ export default function Home() {
       <section id="how-it-works" className="relative z-10 border-y border-[#263241] bg-[#121417] py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">The Plan</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent">The Plan</p>
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-[#F8FAFC] sm:text-4xl">
               How It Works
             </h2>
@@ -275,7 +275,7 @@ export default function Home() {
           <div className="grid gap-8 sm:grid-cols-3">
             {steps.map((step) => (
               <div key={step.number} className="flex flex-col gap-4">
-                <div className="text-5xl font-extrabold text-primary/20 leading-none">
+                <div className="text-5xl font-extrabold text-accent/25 leading-none">
                   {step.number}
                 </div>
                 <h3 className="text-lg font-bold text-[#F8FAFC]">{step.title}</h3>
@@ -307,9 +307,9 @@ export default function Home() {
               return (
                 <div
                   key={group.title}
-                  className={`flex flex-col gap-4 rounded-2xl border border-border bg-white p-6 transition-all ${
+                  className={`flex flex-col gap-4 rounded-2xl border border-[#D7E2EC] bg-[#F3F7FA] p-6 shadow-lg shadow-black/10 transition-all ${
                     group.available
-                      ? 'hover:border-primary/40 hover:shadow-md'
+                      ? 'hover:border-primary/40 hover:shadow-xl'
                       : 'opacity-50'
                   }`}
                 >
@@ -332,7 +332,7 @@ export default function Home() {
                       </Link>
                       <Link
                         href={`/library?topic=${topicSlug}`}
-                        className="text-sm font-medium text-muted hover:text-primary transition-colors"
+                        className="rounded-full bg-accent/10 px-2.5 py-1 text-sm font-semibold text-accent-dark transition-colors hover:bg-accent/15 hover:text-accent-dark"
                       >
                         Study first →
                       </Link>
