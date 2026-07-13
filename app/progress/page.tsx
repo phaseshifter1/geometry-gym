@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { Dumbbell } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { TOPIC_META } from '@/lib/problems/types';
 import type { TopicId } from '@/lib/problems/types';
 import { InterestField } from '@/components/InterestField';
+import { NavBar } from '@/components/NavBar';
 
 interface WorkoutSession {
   id: string;
@@ -72,26 +72,7 @@ export default async function ProgressPage() {
 
   return (
     <div className="min-h-screen bg-[#111827] font-sans text-[#F8FAFC]">
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-white/95 text-dark backdrop-blur-sm">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/"
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-          >
-            <Dumbbell className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold tracking-tight text-dark">
-              Geometry Gym
-            </span>
-          </Link>
-          <Link
-            href="/"
-            className="text-sm font-medium text-muted hover:text-dark transition-colors"
-          >
-            ← Back to Home
-          </Link>
-        </div>
-      </nav>
+      <NavBar />
 
       <main className="mx-auto max-w-5xl px-6 py-12">
         <p className="text-xs font-semibold uppercase tracking-widest text-accent">

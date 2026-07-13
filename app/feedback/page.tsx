@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { Dumbbell, MessageSquare, Send } from 'lucide-react';
+import { MessageSquare, Send } from 'lucide-react';
+import { NavBar } from '@/components/NavBar';
 
 export default function FeedbackPage() {
   const [name, setName] = useState('');
@@ -29,19 +29,7 @@ export default function FeedbackPage() {
   return (
     <div className="min-h-screen bg-[#111827] text-[#F8FAFC] font-sans">
 
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-white/95 text-dark backdrop-blur-sm">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Dumbbell className="h-6 w-6 text-primary" />
-            <span className="text-2xl font-bold tracking-tight text-dark">Geometry Gym</span>
-            <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Beta</span>
-          </Link>
-          <Link href="/" className="text-base font-medium text-muted hover:text-dark transition-colors">
-            Home
-          </Link>
-        </div>
-      </nav>
+      <NavBar />
 
       <div className="mx-auto max-w-2xl px-6 py-12">
 
