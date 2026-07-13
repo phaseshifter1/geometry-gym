@@ -27,14 +27,14 @@ export default function FeedbackPage() {
   const canSubmit = love.trim() || hate.trim() || missing.trim();
 
   return (
-    <div className="min-h-screen bg-white text-dark font-sans">
+    <div className="min-h-screen bg-[#111827] text-[#F8FAFC] font-sans">
 
       {/* Nav */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 border-b border-border bg-white/95 text-dark backdrop-blur-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Dumbbell className="h-6 w-6 text-primary" />
-            <span className="text-2xl font-bold tracking-tight">Geometry Gym</span>
+            <span className="text-2xl font-bold tracking-tight text-dark">Geometry Gym</span>
             <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Beta</span>
           </Link>
           <Link href="/" className="text-base font-medium text-muted hover:text-dark transition-colors">
@@ -43,24 +43,24 @@ export default function FeedbackPage() {
         </div>
       </nav>
 
-      <div className="mx-auto max-w-xl px-6 py-12">
+      <div className="mx-auto max-w-2xl px-6 py-12">
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-            <MessageSquare className="h-5 w-5 text-primary" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10">
+            <MessageSquare className="h-5 w-5 text-accent-dark" />
           </div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary">Beta Feedback</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent">Beta Feedback</p>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-dark mb-2">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#F8FAFC] mb-2">
           Help us build a better math gym
         </h1>
-        <p className="text-base text-muted mb-10">
+        <p className="text-base text-[#CBD5E1] mb-10">
           Tell us what&apos;s working, what isn&apos;t, and what you wish existed.
           Every rep of feedback makes this better.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-[#D7E2EC] bg-[#F8FAFC] p-6 shadow-xl shadow-black/20 sm:p-8">
 
           {/* Name */}
           <div>
@@ -71,7 +71,7 @@ export default function FeedbackPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-dark placeholder-muted focus:border-primary focus:outline-none"
+              className="w-full rounded-xl border border-[#D7E2EC] bg-white px-4 py-3 text-sm text-dark placeholder-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
             />
           </div>
 
@@ -85,7 +85,7 @@ export default function FeedbackPage() {
               onChange={(e) => setLove(e.target.value)}
               placeholder="What's working well for you?"
               rows={3}
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-dark placeholder-muted focus:border-primary focus:outline-none resize-none"
+              className="w-full rounded-xl border border-[#D7E2EC] bg-white px-4 py-3 text-sm text-dark placeholder-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"
             />
           </div>
 
@@ -99,7 +99,7 @@ export default function FeedbackPage() {
               onChange={(e) => setHate(e.target.value)}
               placeholder="Be honest — we can take it."
               rows={3}
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-dark placeholder-muted focus:border-primary focus:outline-none resize-none"
+              className="w-full rounded-xl border border-[#D7E2EC] bg-white px-4 py-3 text-sm text-dark placeholder-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"
             />
           </div>
 
@@ -113,7 +113,7 @@ export default function FeedbackPage() {
               onChange={(e) => setMissing(e.target.value)}
               placeholder="What would make you come back every day?"
               rows={3}
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-dark placeholder-muted focus:border-primary focus:outline-none resize-none"
+              className="w-full rounded-xl border border-[#D7E2EC] bg-white px-4 py-3 text-sm text-dark placeholder-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"
             />
           </div>
 
@@ -127,7 +127,7 @@ export default function FeedbackPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-dark placeholder-muted focus:border-primary focus:outline-none"
+              className="w-full rounded-xl border border-[#D7E2EC] bg-white px-4 py-3 text-sm text-dark placeholder-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
             />
           </div>
 
@@ -138,7 +138,7 @@ export default function FeedbackPage() {
           <button
             type="submit"
             disabled={!canSubmit}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:opacity-40"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Send className="h-4 w-4" />
             Send Feedback
