@@ -97,7 +97,7 @@ export default function Home() {
   });
 
   return (
-    <div className="relative min-h-screen bg-white text-dark font-sans">
+    <div className="relative min-h-screen bg-[#111827] text-[#F8FAFC] font-sans">
 
       {/* Decorative geometry shape watermark */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -108,7 +108,7 @@ export default function Home() {
             style={{ top, left, width: size, height: size, transform: `rotate(${rotate}deg)` }}
             viewBox="0 0 100 100"
             fill="none"
-            stroke="#efefef"
+            stroke="#263241"
             strokeWidth={2}
             strokeLinejoin="round"
           >
@@ -135,7 +135,7 @@ export default function Home() {
                 <ellipse cx="50" cy="84" rx="40" ry="12" />
                 <line x1="50" y1="6" x2="10" y2="84" />
                 <line x1="50" y1="6" x2="90" y2="84" />
-                <ellipse cx="50" cy="84" rx="40" ry="12" strokeDasharray="5 3" stroke="#efefef" />
+                <ellipse cx="50" cy="84" rx="40" ry="12" strokeDasharray="5 3" stroke="#263241" />
               </>
             )}
             {type === 'pentagon' && (
@@ -188,18 +188,18 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-16 text-center">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-muted">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#263241] bg-[#18212F] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#CBD5E1]">
           <Flame className="h-3 w-3 text-primary" />
           Daily geometry training
         </div>
         <p className="text-3xl font-bold text-primary tracking-wide">
           Building stronger brains one math rep at a time.
         </p>
-        <h1 className="mt-4 text-5xl font-extrabold leading-tight tracking-tight text-dark sm:text-6xl lg:text-7xl">
+        <h1 className="mt-4 text-5xl font-extrabold leading-tight tracking-tight text-[#F8FAFC] sm:text-6xl lg:text-7xl">
           Train Your{" "}
           <span className="text-primary">Brain</span>
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted">
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#CBD5E1]">
           Math is a skill — and like any skill, it gets stronger with practice.
           Geometry Gym gives you daily workouts that build real understanding,
           one problem at a time. No pressure. Just reps.
@@ -214,7 +214,7 @@ export default function Home() {
           </Link>
           <a
             href="#topics"
-            className="flex items-center gap-2 rounded-full border border-border px-7 py-3.5 text-base font-semibold text-dark transition-colors hover:bg-surface"
+            className="flex items-center gap-2 rounded-full border border-[#263241] px-7 py-3.5 text-base font-semibold text-[#F8FAFC] transition-colors hover:bg-[#18212F]"
           >
             Browse Topics
           </a>
@@ -226,7 +226,7 @@ export default function Home() {
 
       {/* Today's Workout Card */}
       <section id="workout" className="relative z-10 mx-auto max-w-6xl px-6 pb-20">
-        <div className="overflow-hidden rounded-2xl border border-border bg-surface">
+        <div className="overflow-hidden rounded-2xl border border-[#263241] bg-[#F8FAFC] shadow-xl shadow-black/20">
           <div className="flex items-center justify-between border-b border-border bg-white px-8 py-5">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-muted">{today}</p>
@@ -263,11 +263,11 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="relative z-10 bg-gradient-to-b from-white via-orange-50 to-white py-20">
+      <section id="how-it-works" className="relative z-10 border-y border-[#263241] bg-[#121417] py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary">The Plan</p>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-dark sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-[#F8FAFC] sm:text-4xl">
               How It Works
             </h2>
           </div>
@@ -278,8 +278,8 @@ export default function Home() {
                 <div className="text-5xl font-extrabold text-primary/20 leading-none">
                   {step.number}
                 </div>
-                <h3 className="text-lg font-bold text-dark">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-muted">{step.description}</p>
+                <h3 className="text-lg font-bold text-[#F8FAFC]">{step.title}</h3>
+                <p className="text-base leading-relaxed text-[#CBD5E1]">{step.description}</p>
               </div>
             ))}
           </div>
@@ -291,10 +291,10 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary">The Training Floor</p>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-dark sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-[#F8FAFC] sm:text-4xl">
               Pick a Muscle Group
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted">
+            <p className="mx-auto mt-4 max-w-xl text-base text-[#CBD5E1]">
               Each topic is a different part of your geometry toolkit.
               Work through them all or focus on what you need most.
             </p>
@@ -319,20 +319,20 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-dark">{group.title}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-muted">{group.description}</p>
+                    <h3 className="text-lg font-bold text-dark">{group.title}</h3>
+                    <p className="mt-2 text-[15px] leading-relaxed text-muted">{group.description}</p>
                   </div>
                   {group.available && (
                     <div className="flex items-center justify-between pt-2 border-t border-border">
                       <Link
                         href={`${group.href}?mode=practice`}
-                        className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                        className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
                       >
                         Start training <ChevronRight className="h-3 w-3" />
                       </Link>
                       <Link
                         href={`/library?topic=${topicSlug}`}
-                        className="text-xs text-muted hover:text-primary transition-colors"
+                        className="text-sm font-medium text-muted hover:text-primary transition-colors"
                       >
                         Study first →
                       </Link>
@@ -346,9 +346,9 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-border py-10">
+      <footer className="relative z-10 border-t border-[#263241] py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-6 text-center sm:flex-row sm:justify-between">
-          <div className="flex items-center gap-2 text-sm font-semibold text-dark">
+          <div className="flex items-center gap-2 text-sm font-semibold text-[#F8FAFC]">
             <Dumbbell className="h-4 w-4 text-primary" />
             Geometry Gym
             <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Beta</span>

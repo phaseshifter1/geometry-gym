@@ -4,14 +4,14 @@ import { SignInButton } from './SignInButton';
 
 export function NavBar() {
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur-sm">
+    <nav className="sticky top-0 z-50 border-b border-border bg-white/95 text-dark backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link
           href="/"
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
           <Dumbbell className="h-6 w-6 text-primary" />
-          <span className="text-2xl font-bold tracking-tight">Geometry Gym</span>
+          <span className="text-2xl font-bold tracking-tight text-dark">Geometry Gym</span>
           <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
             Beta
           </span>
